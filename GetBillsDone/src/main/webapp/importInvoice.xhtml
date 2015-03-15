@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Import | A-Faktury</title>
+    </h:head>
+    <h:body>
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/navigation.xhtml" />
+
+            <h:form>
+                <p:panel header="Import faktury">
+
+
+                    <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
+                        <f:facet name="options">
+                            <p:commandButton process="@this" title="Zavřít" validateClient="false" action="invoices" icon="ui-icon-close" />
+                        </f:facet>
+                    </p:menubar>
+
+                    Put the content here!
+                    
+                    <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
+                        <f:facet name="options">
+                            <p:commandButton action="invoices" value="Import" validateClient="true"/>
+                        </f:facet>
+                    </p:menubar>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+
+        </div>
+    </h:body>
+</html>
+

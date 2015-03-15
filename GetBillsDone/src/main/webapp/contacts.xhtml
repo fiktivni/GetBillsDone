@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Kontakty | A-Faktury</title>
+    </h:head>
+    <h:body>
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/navigation.xhtml" />
+
+            <h:form id="form">
+                <p:panel header="Kontakty">
+
+                    <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
+                        <p:menuitem>
+                            <p:commandButton action="#{contactBean.clear}" icon="ui-icon-document" title="Nový kontakt" />
+                        </p:menuitem>
+                        <f:facet name="options">
+                            <p:inputText onkeypress="if (event.keyCode === 13) { document.getElementById('form:search_button').click(); return false; }" placeholder="Hledat" />
+                            <p:commandButton id="search_button" icon="ui-icon-search" action="#" process="@this" />
+                        </f:facet>
+                    </p:menubar>
+
+                    <p:dataTable paginator="true" var="person" value="#{dashboardBean.persons}">
+
+                        <p:column headerText="Jméno">
+                            <h:outputText value="#{person.wholename}" />
+                        </p:column>
+
+                        <p:column headerText="Firma">
+                            <h:outputText value="#{person.company}" />
+                        </p:column>
+
+                        <p:column headerText="Email">
+                            <h:outputText value="#{person.email}" />
+                        </p:column>
+
+                        <p:column headerText="Telefon">
+                            <h:outputText value="#{person.phone}" />
+                        </p:column>
+
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton action="contact"  icon="ui-icon-pencil" title="Otevřít" >
+                                <f:setPropertyActionListener value="#{person}" target="#{contactBean.contact}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

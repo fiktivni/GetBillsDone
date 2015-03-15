@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Seznámení | A-Faktury</title>
+        <link rel="icon" 
+              type="image/png" 
+              href="images/fav.png" />
+    </h:head>
+    <h:body >
+
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/header.xhtml" />
+
+            <div style="float: right; margin-right: 100px;">
+
+                <h:form id="loginForm" >         
+
+                    <p:growl id="msg" showDetail="true" life="3000"  />
+
+                    <p:panel header="Přihlášení" style="width: 350px;">
+
+                        <h:panelGrid id="loginPanel" columns="2" cellpadding="5">
+
+
+                            <p:outputLabel for="email" value="E-mail:" />
+                            <p:inputText id="email" value="#{indexBean.email}" ></p:inputText>
+
+                            <p:outputLabel for="password" value="Heslo:" />
+                            <p:password id="password" value="#{indexBean.password}"  feedback="false"></p:password>
+
+                            <p:spacer></p:spacer>
+                            <p:selectBooleanCheckbox itemLabel=" Zapamatovat"> </p:selectBooleanCheckbox>
+
+
+
+                            <p:spacer></p:spacer>
+                            <p:commandButton action="#{indexBean.loginProject}" value="Přihlásit se" update="loginForm" ajax="true" ></p:commandButton>
+
+                        </h:panelGrid>
+
+                    </p:panel>
+
+                </h:form>
+
+                <h:form style=" margin-left: -371px; margin-top: -53px;">
+                    <p:commandButton action="registration" value="Registrace" ajax="false"/>
+                </h:form>
+            </div>
+
+            <div style="margin-left: 100px; margin-bottom: 100px; width: 440px; color: slategrey; text-align: center; padding-bottom: 100px;">
+                <h2 style="margin: 0; padding: 0;">Vaše online fakturace</h2>
+                <p>Bezplatný online fakturační systémem;<br />rychlý, jednoduchý, spolehlivý.</p>
+                <ul style="margin-bottom: 50px;">
+                    <li>Tvorba, PDF export a archivace faktur</li>
+                    <li>Import údajů ze serverů Aukro!</li>
+                </ul>
+            </div>
+
+            <ui:include src="/compositions/footer.xhtml" />
+
+        </div>
+
+        <br />
+        <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
+        <br />
+        <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
+    </h:body> 
+
+</html>

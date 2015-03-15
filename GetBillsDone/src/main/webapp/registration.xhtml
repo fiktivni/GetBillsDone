@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registrace | A-Faktury</title>
+        <link rel="icon" 
+              type="image/png" 
+              href="images/fav.png" />
+    </h:head>
+    <h:body>
+
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/header.xhtml" />
+
+            <h:form id="form" onkeypress="if (event.keyCode === 13) {
+                        document.getElementById('form:register_button').click();
+                        return false;
+                    }" >
+                <p:panel header="Registrace" style="margin: 0 100px 0 100px;">
+
+                    <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
+                        <f:facet name="options">
+                            <p:commandButton process="@this" title="Zavřít" validateClient="false" action="index" icon="ui-icon-close" />
+                        </f:facet>
+                    </p:menubar>
+
+                    <p:messages id="msg" closable="true"/>
+
+                    <h:panelGrid id="grid" columns="4" cellpadding="5" style="margin: auto;">
+
+                        <p:outputLabel for="email" value="E-mail:"/>                   
+                        <p:inputText id="email" value="#{registrationBean.account.email}" required="true" label="E-mail" validatorMessage="Chyba"/>
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+
+
+                        <p:outputLabel for="password1" value="Heslo:"/>                   
+                        <p:password id="password1" value="#{registrationBean.account.password}" required="true" match="password2" label="Heslo" validatorMessage="Heslo se musí shodovat a mít 6 až 45 znaků " />
+                        <p:outputLabel for="password2" value="Heslo znovu:"/>                   
+                        <p:password id="password2" value="#{registrationBean.controlPassword}" required="true" label="Heslo znovu"/>
+
+                        <p:outputLabel for="name" value="Jméno:"/>                   
+                        <p:inputText id="name" value="#{registrationBean.user.name}" required="false" label="Jméno" validatorMessage="Chyba" />
+                        <p:outputLabel for="lastName" value="Příjmení:"/>                   
+                        <p:inputText id="lastName" value="#{registrationBean.user.lastname}" required="false" label="Příjmení" validatorMessage="Chyba" />
+
+                        <p:outputLabel for="company" value="Firma:"/>                   
+                        <p:inputText id="company" value="#{registrationBean.user.company}" required="false" label="Firma" validatorMessage="Chyba" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+
+                        <p:outputLabel for="ico" value="IČO:"/>                   
+                        <p:inputText id="ico" value="#{registrationBean.user.ico}" required="false" label="IČO" validatorMessage="Chyba" />
+                        <p:outputLabel for="dic" value="DIČ:"/>                   
+                        <p:inputText id="dic" value="#{registrationBean.user.dic}" required="false" label="DIČ" validatorMessage="Chyba" />
+
+                        <p:outputLabel for="bankaccount" value="Číslo účtu:"/>                   
+                        <p:inputText id="bankaccount" value="#{registrationBean.user.bankaccount}" required="false" label="Číslo účtu" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+
+                        <p:outputLabel for="street" value="Ulice:"/>                   
+                        <p:inputText id="street" value="#{registrationBean.user.street}" required="false" label="Ulice" validatorMessage="Chyba"/>
+                        <p:outputLabel for="house" value="Číslo:"/>                   
+                        <p:inputText id="house" value="#{registrationBean.user.house}" required="false" label="Číslo" validatorMessage="Chyba"/>
+
+                        <p:outputLabel for="pcode" value="PSČ:"/>                   
+                        <p:inputText id="pcode" value="#{registrationBean.user.pcode}" required="false" label="PSČ" validatorMessage="Chyba: PSČ musí být pětimístné číslo např. 37001"/>
+                        <p:outputLabel for="city" value="Město:"/>                   
+                        <p:inputText  id="city" value="#{registrationBean.user.city}" required="false" label="Město" validatorMessage="Chyba"/>
+
+                        <p:outputLabel for="state" value="Stát:"/>                   
+                        <p:inputText id="state" value="#{registrationBean.user.state}" required="false" label="Stát" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+
+                        <p:outputLabel for="phone" value="Telefon:"/>                   
+                        <p:inputText id="phone" value="#{registrationBean.user.phone}" required="false" label="Telefon" />
+                        <p:outputLabel for="fax" value="Fax:"/>                   
+                        <p:inputText id="fax" value="#{registrationBean.user.fax}" required="false" label="Fax" />
+
+
+                        <f:facet name="footer">
+                            <p:selectBooleanCheckbox itemLabel="Souhlasím s podmínkami služby." id="agreed" value="#{registrationBean.agreed}" label="Souhlas:" validatorMessage="S podmínkami služby je nutné souhlasit"/>
+                        </f:facet>
+
+                    </h:panelGrid>
+
+                    <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
+                        <f:facet name="options">
+                            <p:commandButton id="register_button" action="#{registrationBean.registerNewUser}" value="Registrovat" update="grid msg" ajax="false" validateClient="true"/>
+                        </f:facet>
+                    </p:menubar>
+
+                </p:panel>
+
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+
+        </div>
+
+    </h:body>
+</html>
+

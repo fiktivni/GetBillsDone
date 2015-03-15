@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="fakturujem"/>
+  <table-filter match-name="item"/>
+  <table-filter match-name="state"/>
+  <table-filter match-name="rate"/>
+  <table-filter match-name="invoice"/>
+  <table-filter match-name="invoice_has_person"/>
+  <table-filter match-name="person"/>
+  <table-filter match-name="account"/>
+  <table-filter match-name="method"/>
+  <table-filter match-name="invoice_has_item"/>
+</hibernate-reverse-engineering>

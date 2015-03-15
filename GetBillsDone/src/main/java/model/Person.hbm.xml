@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31.8.2014 5:02:47 by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="model.Person" table="person" catalog="fakturujem">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="accountIdaccount" type="int">
+            <column name="account_idaccount" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="45" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="45" />
+        </property>
+        <property name="company" type="string">
+            <column name="company" length="45" />
+        </property>
+        <property name="street" type="string">
+            <column name="street" length="45" />
+        </property>
+        <property name="house" type="string">
+            <column name="house" length="45" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="45" />
+        </property>
+        <property name="pcode" type="java.lang.Integer">
+            <column name="pcode" />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="45" />
+        </property>
+        <property name="isowner" type="java.lang.Boolean">
+            <column name="isowner" />
+        </property>
+        <property name="phone" type="java.lang.Integer">
+            <column name="phone" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="45" />
+        </property>
+        <property name="fax" type="java.lang.Integer">
+            <column name="fax" />
+        </property>
+        <property name="www" type="string">
+            <column name="www" length="45" />
+        </property>
+        <property name="bankaccount" type="string">
+            <column name="bankaccount" length="45" />
+        </property>
+        <property name="ico" type="java.lang.Integer">
+            <column name="ico" />
+        </property>
+        <property name="dic" type="string">
+            <column name="dic" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

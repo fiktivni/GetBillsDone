@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Položky | A-Faktury</title>
+    </h:head>
+    <h:body>
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/navigation.xhtml" />
+
+            <h:form id="form">
+
+
+                <p:panel header="Položky">
+
+
+                    <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
+                        <p:menuitem>
+                            <p:commandButton title="Nová položka" action="item" icon="ui-icon-document" />
+                        </p:menuitem>
+                        <f:facet name="options">
+                            <p:inputText onkeypress="if (event.keyCode === 13) { document.getElementById('form:search_button').click(); return false; }" placeholder="Hledat" />
+                            <p:commandButton id="search_button" icon="ui-icon-search" action="#" process="@this" />
+                        </f:facet>
+                    </p:menubar>
+
+                    <p:dataTable paginator="true" var="item" value="#{dashboardBean.items}">
+
+                        <p:column headerText="Název">
+                            <p:outputLabel value="#{item.title}" />
+                        </p:column>
+
+                        <p:column headerText="Kód">
+                            <p:outputLabel value="#{item.code}" />
+                        </p:column>
+
+                        <p:column headerText="Cena">
+                            <p:outputLabel value="#{item.price}" />
+                        </p:column>
+
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton  icon="ui-icon-pencil" title="Otevřít" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:panel>
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

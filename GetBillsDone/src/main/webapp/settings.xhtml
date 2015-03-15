@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Nastavení | A-Faktury</title>
+        <link rel="icon" 
+              type="image/png" 
+              href="images/fav.png" />
+    </h:head>
+    <h:body>
+
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/navigation.xhtml" />
+
+            <h:form id="form" onkeypress="if (event.keyCode === 13) {
+                        document.getElementById('form:save_button').click();
+                        return false;
+                    }">
+                <p:panel header="Nastavení">       
+
+                    <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
+                        <f:facet name="options">
+                            <p:commandButton process="@this" title="Zavřít" validateClient="false" action="dashboard" icon="ui-icon-close" />
+                        </f:facet>
+                    </p:menubar>
+
+                    <p:messages id="msg" closable="true"/>
+
+                    <h:panelGrid id="grid" columns="4" cellpadding="5" style="margin: auto;">
+
+                        <p:outputLabel for="name" value="Jméno:"/>                   
+                        <p:inputText id="name" value="#{settingsBean.user.name}" required="false" label="Jméno" validatorMessage="Chyba" />
+                        <p:outputLabel for="lastName" value="Příjmení:"/>                   
+                        <p:inputText id="lastName" value="#{settingsBean.user.lastname}" required="false" label="Příjmení" validatorMessage="Chyba" />
+
+                        <p:outputLabel for="company" value="Firma:"/>                   
+                        <p:inputText id="company" value="#{settingsBean.user.company}" required="false" label="Firma" validatorMessage="Chyba" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+
+                        <p:outputLabel for="ico" value="IČO:"/>                   
+                        <p:inputText id="ico" value="#{settingsBean.user.ico}" required="false" label="IČO" />
+                        <p:outputLabel for="dic" value="DIČ:"/>                   
+                        <p:inputText id="dic" value="#{settingsBean.user.dic}" required="false" label="DIČ" />
+
+                        <p:outputLabel for="bankaccount" value="Číslo účtu:"/>                   
+                        <p:inputText id="bankaccount" value="#{settingsBean.user.bankaccount}" required="false" label="Číslo účtu" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+                        
+                        <p:outputLabel for="street" value="Ulice:"/>                   
+                        <p:inputText id="street" value="#{settingsBean.user.street}" required="false" label="Ulice" />
+                        <p:outputLabel for="house" value="Číslo:"/>                   
+                        <p:inputText id="house" value="#{settingsBean.user.house}" required="false" label="Číslo" />
+                        
+                        <p:outputLabel for="pcode" value="PSČ:"/>                   
+                        <p:inputText id="pcode" value="#{settingsBean.user.pcode}" required="false" label="PSČ" />
+                        <p:outputLabel for="city" value="Město:"/>                   
+                        <p:inputText  id="city" value="#{settingsBean.user.city}" required="false" label="Město" />
+
+                        <p:outputLabel for="state" value="Stát:"/>                   
+                        <p:inputText id="state" value="#{settingsBean.user.state}" required="false" label="Stát" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+                        
+                        <p:outputLabel for="email" value="E-mail:"/>                   
+                        <p:inputText id="email" value="#{settingsBean.user.email}" required="false" label="E-mail" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
+
+                        <p:outputLabel for="phone" value="Telefon:"/>                   
+                        <p:inputText id="phone" value="#{settingsBean.user.phone}" required="false" label="Telefon" />
+                        <p:outputLabel for="fax" value="Fax:"/>                   
+                        <p:inputText id="fax" value="#{settingsBean.user.fax}" required="false" label="Fax" />
+
+                    </h:panelGrid>
+
+                    <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
+                        <p:menuitem>
+                            <p:commandButton process="@this" action="index" actionListener="#{settingsBean.deleteUser}" title="Odstranit účet" icon="ui-icon-trash" validateClient="false">
+                                <p:confirm header="Potvrzení" message="Opravdu chcete nenávratně smazat svůj účet?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:menuitem>
+                        <f:facet name="options">
+                            <p:commandButton id="save_button" ajax="false" action="#{settingsBean.updateUser}" value="Uložit" process="grid" update="grid msg" validateClient="true" />
+                        </f:facet>
+                    </p:menubar>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Ano" type="button" styleClass="ui-confirmdialog-yes" />
+                        <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" />
+                    </p:confirmDialog>
+
+                </p:panel>
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+
+        </div>
+
+    </h:body>
+</html>
+

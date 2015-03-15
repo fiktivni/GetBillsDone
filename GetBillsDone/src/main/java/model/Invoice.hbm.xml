@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 31.8.2014 5:02:47 by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="model.Invoice" table="invoice" catalog="fakturujem">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="invoicenumber" type="int">
+            <column name="invoicenumber" not-null="true" />
+        </property>
+        <property name="accountIdaccount" type="int">
+            <column name="account_idaccount" not-null="true" />
+        </property>
+        <property name="stateIdstate" type="int">
+            <column name="state_idstate" not-null="true" />
+        </property>
+        <property name="methodIdmethod" type="int">
+            <column name="method_idmethod" not-null="true" />
+        </property>
+        <property name="created" type="date">
+            <column name="created" length="10" not-null="true" />
+        </property>
+        <property name="due" type="date">
+            <column name="due" length="10" not-null="true" />
+        </property>
+        <property name="duzp" type="date">
+            <column name="duzp" length="10" not-null="true" />
+        </property>
+        <property name="variablesymbol" type="int">
+            <column name="variablesymbol" not-null="true" />
+        </property>
+        <property name="constantsymbol" type="java.lang.Integer">
+            <column name="constantsymbol" />
+        </property>
+        <property name="specificsymbol" type="java.lang.Integer">
+            <column name="specificsymbol" />
+        </property>
+        <property name="total" type="java.lang.Integer">
+            <column name="total" />
+        </property>
+    </class>
+</hibernate-mapping>
