@@ -257,7 +257,7 @@ public class InvoiceBean implements Serializable {
         
         
 
-        return "dashboard";
+        return "invoices";
     }
 
     /*

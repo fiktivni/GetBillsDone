@@ -218,6 +218,20 @@ public class Queries {
         }
     }
     
+    public static void deleteItem(Item item) {
+
+        Session s = sessionFactory.openSession();
+        try {
+            Transaction tx = s.beginTransaction();
+            s.delete(item);
+            tx.commit();
+        } catch (HibernateException e) {
+            // TODO
+        } finally {
+            s.close();
+        }
+    }
+    
     /**
      * End of line for the account.
      * @param account 
@@ -251,6 +265,19 @@ public class Queries {
             s.close();
         }
         
+    }
+    
+    public static void updateItem(Item item) {
+        Session s = sessionFactory.openSession();
+        try{
+            Transaction tx = s.beginTransaction();
+            s.update(item);
+            tx.commit();
+        } catch (HibernateException e) {
+            // TODO
+        } finally {
+            s.close();
+        }
     }
 
     public static State getStateAtId(int id) {

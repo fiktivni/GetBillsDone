@@ -21,7 +21,7 @@
 
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
                         <p:menuitem>
-                            <p:commandButton title="Nová položka" action="item" icon="ui-icon-document" />
+                            <p:commandButton title="Nová položka" action="#{itemBean.clear}" icon="ui-icon-document" />
                         </p:menuitem>
                         <f:facet name="options">
                             <p:inputText onkeypress="if (event.keyCode === 13) { document.getElementById('form:search_button').click(); return false; }" placeholder="Hledat" />
@@ -44,7 +44,9 @@
                         </p:column>
 
                         <p:column style="width:32px;text-align: center">
-                            <p:commandButton  icon="ui-icon-pencil" title="Otevřít" />
+                            <p:commandButton action="item"  icon="ui-icon-pencil" title="Otevřít" >
+                                <f:setPropertyActionListener value="#{item}" target="#{itemBean.item}" />
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>

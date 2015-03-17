@@ -35,11 +35,6 @@
                             <p:password id="password" value="#{indexBean.password}"  feedback="false"></p:password>
 
                             <p:spacer></p:spacer>
-                            <p:selectBooleanCheckbox itemLabel=" Zapamatovat"> </p:selectBooleanCheckbox>
-
-
-
-                            <p:spacer></p:spacer>
                             <p:commandButton action="#{indexBean.loginProject}" value="Přihlásit se" update="loginForm" ajax="true" ></p:commandButton>
 
                         </h:panelGrid>
@@ -48,18 +43,14 @@
 
                 </h:form>
 
-                <h:form style=" margin-left: -371px; margin-top: -53px;">
-                    <p:commandButton action="registration" value="Registrace" ajax="false"/>
+                <h:form style=" margin-left: -387px; margin-top: -53px;">
+                    <p:commandButton action="registration" value="Registrovat se" ajax="false"/>
                 </h:form>
             </div>
 
             <div style="margin-left: 100px; margin-bottom: 100px; width: 440px; color: slategrey; text-align: center; padding-bottom: 100px;">
-                <h2 style="margin: 0; padding: 0;">Vaše online fakturace</h2>
-                <p>Bezplatný online fakturační systémem;<br />rychlý, jednoduchý, spolehlivý.</p>
-                <ul style="margin-bottom: 50px;">
-                    <li>Tvorba, PDF export a archivace faktur</li>
-                    <li>Import údajů ze serverů Aukro!</li>
-                </ul>
+                <h2 style="margin: 0; padding: 0;">Svobodný účetní systém</h2>
+                <p>Otevřený zdrojový kód</p><p>Jednoduché ovládání</p>
             </div>
 
             <ui:include src="/compositions/footer.xhtml" />

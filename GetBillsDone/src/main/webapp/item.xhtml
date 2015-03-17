@@ -25,22 +25,22 @@
 
                     <h:panelGrid id="grid" columns="2" cellpadding="5" style="margin: auto;">
                         <p:outputLabel for="title" value="Název:"/>                   
-                        <p:inputText style="width: 500px;" id="title" value="#{itemsBean.item.title}" required="true" label="Název"/>
+                        <p:inputText style="width: 500px;" id="title" value="#{itemBean.item.title}" required="true" label="Název"/>
 
                         <p:outputLabel for="price" value="Cena:"/>
-                        <p:spinner id="price" value="#{itemsBean.item.price}" required="true" suffix=" Kč" min="0" />
+                        <p:spinner id="price" value="#{itemBean.item.price}" required="true" suffix=" Kč" min="0" />
 
                         <p:outputLabel for="code" value="Kód:"/>
-                        <p:inputText id="code" value="#{itemsBean.item.code}" required="false" label="Kód"/>
+                        <p:inputText id="code" value="#{itemBean.item.code}" required="false" label="Kód"/>
 
                     </h:panelGrid>
 
                     <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
                         <p:menuitem>
-                            <p:commandButton title="Smazat" process="@this" icon="ui-icon-trash" action="#" />
+                            <p:commandButton title="Smazat" process="@this" icon="ui-icon-trash" action="#{itemBean.deleteItem}" />
                         </p:menuitem>
                         <f:facet name="options">
-                            <p:commandButton id="save_button" ajax="true" action="#" value="Uložit" update="msg grid" />
+                            <p:commandButton id="save_button" ajax="false" action="#{itemBean.saveItem}" value="Uložit" process="grid" update="msg grid" validateClient="true"/>
                         </f:facet>
                     </p:menubar>
 
