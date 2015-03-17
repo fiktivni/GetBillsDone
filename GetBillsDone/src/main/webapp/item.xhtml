@@ -27,8 +27,14 @@
                         <p:outputLabel for="title" value="Název:"/>                   
                         <p:inputText style="width: 500px;" id="title" value="#{itemBean.item.title}" required="true" label="Název"/>
 
-                        <p:outputLabel for="price" value="Cena:"/>
-                        <p:spinner id="price" value="#{itemBean.item.price}" required="true" suffix=" Kč" min="0" />
+                        <p:outputLabel for="netPrice" value="Cena bez DPH:"/>
+                        <p:spinner id="netPrice" value="#{itemBean.item.netPrice}" required="true" suffix=" Kč" min="0" />
+                        
+                        <p:outputLabel for="taxRate" value="DPH:"/>
+                        <p:spinner id="taxRate" value="#{itemBean.item.taxRate}" required="true" suffix=" %" min="0" />
+                        
+                        <p:outputLabel for="fullPrice" value="Cena s DPH:"/>
+                        <p:spinner id="fullPrice" value="#{itemBean.item.fullPrice}" required="true" suffix=" Kč" min="0" />
 
                         <p:outputLabel for="code" value="Kód:"/>
                         <p:inputText id="code" value="#{itemBean.item.code}" required="false" label="Kód"/>

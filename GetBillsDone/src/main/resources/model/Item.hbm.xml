@@ -11,14 +11,17 @@
         <property name="accountIdaccount" type="int">
             <column name="account_idaccount" not-null="true" />
         </property>
-        <property name="rateIdrate" type="int">
-            <column name="rate_idrate" not-null="true" />
+        <property name="taxRate" type="int">
+            <column name="tax_rate" not-null="true" />
         </property>
         <property name="title" type="string">
             <column name="title" length="45" not-null="true" />
         </property>
-        <property name="price" type="java.lang.Double">
-            <column name="price" not-null="true" />
+        <property name="netPrice" type="java.lang.Double">
+            <column name="net_price" not-null="true" />
+        </property>
+        <property name="fullPrice" type="java.lang.Double">
+            <column name="full_price" not-null="true" />
         </property>
         <property name="code" type="string">
             <column name="code" length="45" />

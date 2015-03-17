@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -100,7 +101,7 @@ public class InvoiceBean implements Serializable {
         recipient = new Person();
         setMethod(methods.get(0));
         setItem(new Item());
-        getItem().setRate(rates.get(0));
+
 
         Calendar cal = Calendar.getInstance();
         selectedInvoice.setCreated(cal.getTime());
@@ -135,7 +136,7 @@ public class InvoiceBean implements Serializable {
 
         for (Person person : persons) {
             if (person.getWholename().toLowerCase().contains(query)) {
-                if ((person.getId() != customer.getId()) && (person.getId() != recipient.getId())) {
+                if ((!Objects.equals(person.getId(), customer.getId())) && (!Objects.equals(person.getId(), recipient.getId()))) {
                     validResultsCount++;
                     if (validResultsCount <= 10) {
                         filterPersons.add(person);
@@ -154,11 +155,11 @@ public class InvoiceBean implements Serializable {
 
         int validResultsCount = 0;
 
-        for (Item item : items) {
-            if (item.getCode().toLowerCase().contains(query)) {
+        for (Item t : items) {
+            if (t.getCode().toLowerCase().contains(query)) {
                 validResultsCount++;
                 if (validResultsCount <= 10) {
-                    filterItems.add(item);
+                    filterItems.add(t);
                 }
             }
         }
@@ -172,11 +173,11 @@ public class InvoiceBean implements Serializable {
 
         int validResultsCount = 0;
 
-        for (Item item : items) {
-            if (item.getTitle().toLowerCase().contains(query)) {
+        for (Item t : items) {
+            if (t.getTitle().toLowerCase().contains(query)) {
                 validResultsCount++;
                 if (validResultsCount <= 10) {
-                    filterItems.add(item);
+                    filterItems.add(t);
                 }
             }
         }
@@ -190,11 +191,11 @@ public class InvoiceBean implements Serializable {
 
         int validResultsCount = 0;
 
-        for (Method method : getMethods()) {
-            if (method.getTitle().toLowerCase().contains(query)) {
+        for (Method m : getMethods()) {
+            if (m.getTitle().toLowerCase().contains(query)) {
                 validResultsCount++;
                 if (validResultsCount <= 10) {
-                    filterMethods.add(method);
+                    filterMethods.add(m);
                 }
             }
         }
@@ -208,7 +209,7 @@ public class InvoiceBean implements Serializable {
         int total = 0;
 
         for (Item i : invoiceItems) {
-            total += i.getPriceWithVat();
+            total += i.getFullPrice();
         }
 
         /*

@@ -39,8 +39,16 @@
                             <p:outputLabel value="#{item.code}" />
                         </p:column>
 
-                        <p:column headerText="Cena">
-                            <p:outputLabel value="#{item.price}" />
+                        <p:column headerText="Cena bez DPH">
+                            <p:outputLabel value="#{item.netPrice}" />
+                        </p:column>
+                        
+                        <p:column headerText="DPH">
+                            <p:outputLabel value="#{item.taxRate} %" />
+                        </p:column>
+                        
+                        <p:column headerText="Cena s DPH">
+                            <p:outputLabel value="#{item.fullPrice}" />
                         </p:column>
 
                         <p:column style="width:32px;text-align: center">

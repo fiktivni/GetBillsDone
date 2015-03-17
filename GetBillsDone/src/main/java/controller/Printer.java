@@ -45,31 +45,32 @@ public class Printer {
         Map properties = new HashMap();
         Map map;
         double basePrice = 0;
-        double price = 0;
+        double totalPrice = 0;
         
         contractor = clearNulls(contractor);
         recipient = clearNulls(recipient);
         customer = clearNulls(customer);
         
         for (Item i : items){
-            basePrice +=i.getPrice() * i.getInvoiceHasItem().getCount();
-            price += basePrice * ((double)i.getRate().getValue()/100) + basePrice;
+            basePrice += i.getNetPrice() * i.getInvoiceHasItem().getCount();
+            totalPrice += i.getFullPrice() * i.getInvoiceHasItem().getCount();
         }
         
         
 
         // Vypsání položek
         for (int i = 0; i < items.size(); i++) {
-            Double itemBasePrice = items.get(i).getPrice() * items.get(i).getInvoiceHasItem().getCount();
-            int rate = items.get(i).getRate().getValue();
+            int itemCount = items.get(i).getInvoiceHasItem().getCount();
+            Double itemBasePrice = items.get(i).getNetPrice() * itemCount;
+            int rate = items.get(i).getTaxRate();
             map = new HashMap();
             map.put("ITEM_CODE", items.get(i).getCode());
             map.put("ITEM_TITLE", items.get(i).getTitle());
             map.put("ITEM_QUANTITY", Integer.toString(items.get(i).getInvoiceHasItem().getCount()));
-            map.put("ITEM_UNIT_PRICE", formatter.format(items.get(i).getPrice()));
+            map.put("ITEM_UNIT_PRICE", formatter.format(items.get(i).getNetPrice()));
             map.put("ITEM_BASE_PRICE", formatter.format(itemBasePrice));
             map.put("ITEM_DPH_PERCENTAGE", Integer.toString(rate) + "%");
-            map.put("ITEM_FINAL_PRICE", formatter.format((itemBasePrice * ((double)rate/100)) + itemBasePrice));
+            map.put("ITEM_FINAL_PRICE", formatter.format(items.get(i).getFullPrice() * itemCount));
             col.add(map);
         }
         //Empty row trick
@@ -149,8 +150,8 @@ public class Printer {
 
         
         properties.put("SUMMARY_BASE_PRICE", formatter.format(basePrice) + " Kč");
-        properties.put("SUMMARY_DPH", formatter.format(price - basePrice) + " Kč");
-        properties.put("SUMMARY_PRICE", formatter.format(price) + " Kč");
+        properties.put("SUMMARY_DPH", formatter.format(totalPrice - basePrice) + " Kč");
+        properties.put("SUMMARY_PRICE", formatter.format(totalPrice) + " Kč");
 
         JRDataSource dataSource = new JRMapCollectionDataSource(col);
         String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reports/invoice.jasper");

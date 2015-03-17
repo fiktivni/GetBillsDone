@@ -10,7 +10,6 @@ import controller.HttpSessionUtil;
 import controller.Queries;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -31,15 +30,13 @@ public class ItemBean implements Serializable{
 
     @PostConstruct
     public void init() {
-        int userID = getUserID();
         item = new Item();
-        item.setAccountIdaccount(userID);
-        item.setRate(Queries.getRates().get(0));
+        item.setAccountIdaccount(getUserID());
         item.setTitle("");
         item.setCode("");
-        item.setPrice(0);
-        item.setPriceWithVat(0);
-        item.setPriceWithoutVat(0);
+        item.setTaxRate(Queries.getRates().get(0).getValue());
+        item.setNetPrice(0);
+        item.setFullPrice(0);
     }
 
     public Item getItem() {
