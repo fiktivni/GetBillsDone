@@ -8,8 +8,10 @@ package model.beans;
 
 import controller.HttpSessionUtil;
 import controller.Queries;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -21,9 +23,9 @@ import org.primefaces.context.RequestContext;
  *
  * @author fiktivni
  */
-@Named(value = "itemBean")
-@Dependent
-public class ItemBean {
+@Named("itemBean")
+@SessionScoped
+public class ItemBean implements Serializable{
     
     private Item item;
 
