@@ -9,13 +9,16 @@ package model.beans;
 import controller.HttpSessionUtil;
 import controller.Queries;
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import model.Item;
+import model.Rate;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -27,24 +30,48 @@ import org.primefaces.context.RequestContext;
 public class ItemBean implements Serializable{
     
     private Item item;
+    private List<Rate> rates;
+    private Rate rate;
+    private String option;
 
     @PostConstruct
     public void init() {
+        rates = Queries.getRates();
         item = new Item();
         item.setAccountIdaccount(getUserID());
         item.setTitle("");
         item.setCode("");
-        item.setTaxRate(Queries.getRates().get(0).getValue());
+        rate = rates.get(0);
+        item.setTaxRate(rate.getValue());
         item.setNetPrice(0);
         item.setFullPrice(0);
     }
 
     public Item getItem() {
+        // TODO
         return item;
     }
 
     public void setItem(Item item) {
+        // TODO
         this.item = item;
+    }
+
+    public List<Rate> getRates() {
+        return rates;
+    }
+
+    public void setRates(List<Rate> rates) {
+        this.rates = rates;
+    }
+
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        item.setTaxRate(rate.getValue());
+        this.rate = rate;
     }
     
     public String saveItem(){
@@ -68,7 +95,7 @@ public class ItemBean implements Serializable{
         RequestContext.getCurrentInstance().update("form:grid");
         return "item";
     }
-    
+       
     private int getUserID() {
         HttpSession s = HttpSessionUtil.getSession();
         int userID = -1;

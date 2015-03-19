@@ -40,7 +40,9 @@
                         </p:column>
 
                         <p:column headerText="Cena bez DPH">
-                            <p:outputLabel value="#{item.netPrice}" />
+                            <p:outputLabel value="#{item.netPrice}" >
+                                <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                            </p:outputLabel>
                         </p:column>
                         
                         <p:column headerText="DPH">
@@ -48,7 +50,9 @@
                         </p:column>
                         
                         <p:column headerText="Cena s DPH">
-                            <p:outputLabel value="#{item.fullPrice}" />
+                            <p:outputLabel value="#{item.fullPrice}" >
+                                <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                            </p:outputLabel>
                         </p:column>
 
                         <p:column style="width:32px;text-align: center">

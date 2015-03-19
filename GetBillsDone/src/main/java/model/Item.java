@@ -74,6 +74,8 @@ public class Item implements java.io.Serializable {
     }
 
     public void setTaxRate(int taxRate) {
+        this.fullPrice = netPrice + netPrice * (double)taxRate/100.00;
+        this.netPrice= fullPrice / (100.00 + (double)taxRate) * 100;
         this.taxRate = taxRate;
     }
 
@@ -82,6 +84,7 @@ public class Item implements java.io.Serializable {
     }
 
     public void setNetPrice(double netPrice) {
+        this.fullPrice = netPrice + netPrice * (double)taxRate/100.00;
         this.netPrice = netPrice;
     }
 
@@ -90,6 +93,7 @@ public class Item implements java.io.Serializable {
     }
 
     public void setFullPrice(double fullPrice) {
+        this.netPrice= fullPrice / (100.00 + (double)taxRate) * 100;
         this.fullPrice = fullPrice;
     }
 

@@ -12,7 +12,10 @@
         <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
 
             <ui:include src="/compositions/navigation.xhtml" />
-            <h:form id="form" onkeypress="if (event.keyCode === 13) { document.getElementById('form:save_button').click(); return false; }">
+            <h:form id="form" onkeypress="if (event.keyCode === 13) {
+                        document.getElementById('form:save_button').click();
+                        return false;
+                    }">
                 <p:panel header="Položka">   
 
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
@@ -20,24 +23,38 @@
                             <p:commandButton process="@this" title="Zavřít" validateClient="false" action="items" icon="ui-icon-close" />
                         </f:facet>
                     </p:menubar>
-                    
+
                     <p:messages id="msg" closable="true"/>
 
                     <h:panelGrid id="grid" columns="2" cellpadding="5" style="margin: auto;">
                         <p:outputLabel for="title" value="Název:"/>                   
-                        <p:inputText style="width: 500px;" id="title" value="#{itemBean.item.title}" required="true" label="Název"/>
-
-                        <p:outputLabel for="netPrice" value="Cena bez DPH:"/>
-                        <p:spinner id="netPrice" value="#{itemBean.item.netPrice}" required="true" suffix=" Kč" min="0" />
-                        
-                        <p:outputLabel for="taxRate" value="DPH:"/>
-                        <p:spinner id="taxRate" value="#{itemBean.item.taxRate}" required="true" suffix=" %" min="0" />
-                        
-                        <p:outputLabel for="fullPrice" value="Cena s DPH:"/>
-                        <p:spinner id="fullPrice" value="#{itemBean.item.fullPrice}" required="true" suffix=" Kč" min="0" />
+                        <p:inputText id="title" value="#{itemBean.item.title}" required="true" label="Název">
+                            <p:ajax event="change" update="grid" resetValues="false"/>
+                        </p:inputText>
 
                         <p:outputLabel for="code" value="Kód:"/>
-                        <p:inputText id="code" value="#{itemBean.item.code}" required="false" label="Kód"/>
+                        <p:inputText id="code" value="#{itemBean.item.code}" required="false" label="Kód">
+                            <p:ajax event="change" update="grid" resetValues="false"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="taxRate" value="Sazba DPH:"/>
+                        <p:inputText id="taxRate" value="#{itemBean.item.taxRate}" required="true" >
+                            <f:convertNumber pattern="###" locale="cs"/>
+                            <p:ajax event="change" update="grid"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="netPrice" value="Cena bez DPH:"/>
+                        <p:inputText id="netPrice"  value="#{itemBean.item.netPrice}" required="true" >
+                            <f:convertNumber pattern="##0.00" locale="cs"/> 
+                            <p:ajax event="change" update="grid"  />
+                        </p:inputText>
+                        <p:outputLabel for="fullPrice" value="Cena s DPH:"/>
+                        <p:inputText id="fullPrice" value="#{itemBean.item.fullPrice}" required="true" >
+                            <f:convertNumber pattern="##0.00" locale="cs"/>
+                            <p:ajax event="change" update="grid"  />
+                        </p:inputText>
+
+
 
                     </h:panelGrid>
 
