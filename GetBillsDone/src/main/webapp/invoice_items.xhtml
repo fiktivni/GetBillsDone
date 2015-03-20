@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Faktura | A-Faktury</title>
+        <title>Faktura - položky</title>
         <link rel="icon" 
               type="image/png" 
               href="images/fav.png" />
@@ -29,107 +29,141 @@
                             document.getElementById('form:save_button').click();
                             return false;
                         }">
-                  
 
-                          
+                    <p:panel id="invoice" header="Faktura - položky">
 
-                                <p:fieldset id="itemFields" legend="Položky">
+                        <p:selectOneButton value="#{selectOneView.option}">
+                            <f:selectItem itemLabel="Hledat" itemValue="search" />
+                            <f:selectItem itemLabel="Vytvořit" itemValue="create" />
+                        </p:selectOneButton>
 
-                                    <p:messages id="itemEror" closable="true"/>
+                        <p:messages id="itemEror" closable="true"/>
 
-                                    <h:panelGrid id="itemGrid" columns="8" cellpadding="0" cellspacing="2" >
+                        <h:panelGrid id="newItemGrid" columns="2" cellpadding="5" style="margin: auto;">
+                            <p:outputLabel for="newTitle" value="Název:"/>                   
+                            <p:inputText id="newTitle" value="#{invoiceBean.item.title}" required="true" label="Název">
+                                <p:ajax event="change" update="newItemGrid" resetValues="false"/>
+                            </p:inputText>
 
-                                        <p:outputLabel for="inputCode"  value="Kód"/>
-                                        <p:outputLabel for="inputTitle" value="Položka"  />
-                                        <p:outputLabel for="inputAmount"    value="Množství"/>
-                                        <p:outputLabel for="inputPriceWithoutVat" value="Cena/kus" />
-                                        <p:outputLabel for="inputVat" value="DPH" />
-                                        <p:outputLabel for="inputPriceWithoutVat" value="Cena/kus s DPH" />
-                                        <p:outputLabel for="totalAmount"    value="Celkem"/>
-                                        <p:outputLabel />
+                            <p:outputLabel for="newCode" value="Kód:"/>
+                            <p:inputText id="newCode" value="#{invoiceBean.item.code}" required="false" label="Kód">
+                                <p:ajax event="change" update="newItemGrid" resetValues="false"/>
+                            </p:inputText>
 
-                                        <p:autoComplete id="inputCode" value="#{invoiceBean.item}" completeMethod="#{invoiceBean.completeItemCode}"
-                                                        var="item" itemLabel="#{item.code}" itemValue="#{item}" converter="itemConverter" forceSelection="true" size="5"  >
-                                            <p:ajax event="itemSelect" update="itemGrid"  resetValues="true"  />
+                            <p:outputLabel for="newTaxRate" value="Sazba DPH:"/>
+                            <p:inputText id="newTaxRate" value="#{invoiceBean.item.taxRate}" required="true" >
+                                <f:convertNumber pattern="###" locale="cs"/>
+                                <p:ajax event="change" update="newItemGrid"/>
+                            </p:inputText>
 
-                                        </p:autoComplete>
+                            <p:outputLabel for="newNetPrice" value="Cena bez DPH:"/>
+                            <p:inputText id="newNetPrice"  value="#{invoiceBean.item.netPrice}" required="true" >
+                                <f:convertNumber pattern="##0.00" locale="cs"/> 
+                                <p:ajax event="change" update="newItemGrid"  />
+                            </p:inputText>
+                            <p:outputLabel for="newFullPrice" value="Cena s DPH:"/>
+                            <p:inputText id="newFullPrice" value="#{invoiceBean.item.fullPrice}" required="true" >
+                                <f:convertNumber pattern="##0.00" locale="cs"/>
+                                <p:ajax event="change" update="newItemGrid"  />
+                            </p:inputText>
+                        </h:panelGrid>
+                        
 
-                                        <p:autoComplete id="inputTitle"  value="#{invoiceBean.item}" required="true" completeMethod="#{invoiceBean.completeItemTitle}" 
-                                                        var="item" itemLabel="#{item.title}" itemValue="#{item}" converter="itemConverter" forceSelection="true"  >
-                                            <p:ajax event="itemSelect" update="itemGrid"  resetValues="true"  />
+                        <h:panelGrid id="itemGrid" columns="8" cellpadding="0" cellspacing="2" >
 
-                                        </p:autoComplete>
-                                        <p:spinner id="inputAmount" value="#{invoiceBean.item.invoiceHasItem.count}" min="1" suffix=" ks" required="true" size="5" >
-                                            <p:ajax update="itemGrid"  resetValues="true"  />                           
-                                        </p:spinner>
-                                        <p:inputText id="inputPriceWithoutVat" disabled="true"  value="#{invoiceBean.item.priceWithoutVat}" required="false" size="5" >
-                                            <f:convertNumber pattern="##0.00" locale="cs"/> 
-                                            <p:ajax update="itemGrid"  resetValues="true"  />
-                                        </p:inputText>
-                                        <p:selectOneMenu id="inputVat" 
-                                                         effect="fade" var="t" disabled="true" value="#{invoiceBean.item.rate}" converter="rateConverter" >
-                                            <f:selectItem itemLabel="#{invoiceBean.item.rate.value}%" itemValue="#{invoiceBean.item.rate}" />
-                                            <f:selectItems value="#{invoiceBean.rates}"  var="rate" itemLabel="#{rate.value}%" itemValue="#{rate}" />
+                            <p:outputLabel for="inputCode"  value="Kód"/>
+                            <p:outputLabel for="inputTitle" value="Položka"  />
+                            <p:outputLabel for="inputAmount"    value="Množství"/>
+                            <p:outputLabel for="inputPriceWithoutVat" value="Cena/kus" />
+                            <p:outputLabel for="taxRate" value="DPH" />
+                            <p:outputLabel for="inputPriceWithoutVat" value="Cena/kus s DPH" />
+                            <p:outputLabel for="totalAmount"    value="Celkem"/>
+                            <p:outputLabel />
 
-                                            <p:column>
-                                                <h:outputText value="#{t.value}%" />
-                                            </p:column>
-                                            <p:ajax update="itemGrid"  resetValues="true" />
-                                        </p:selectOneMenu>
+                            <p:autoComplete id="inputCode" value="#{invoiceBean.item}" completeMethod="#{invoiceBean.completeItemCode}"
+                                            var="item" itemLabel="#{item.code}" itemValue="#{item}" converter="itemConverter" forceSelection="true" size="5"  >
+                                <p:ajax event="itemSelect" update="itemGrid"  resetValues="true"  />
+
+                            </p:autoComplete>
+
+                            <p:autoComplete id="inputTitle"  value="#{invoiceBean.item}" required="true" completeMethod="#{invoiceBean.completeItemTitle}" 
+                                            var="item" itemLabel="#{item.title}" itemValue="#{item}" converter="itemConverter" forceSelection="true"  >
+                                <p:ajax event="itemSelect" update="itemGrid"  resetValues="true"  />
+
+                            </p:autoComplete>
+                            <p:spinner id="inputAmount" value="#{invoiceBean.item.invoiceHasItem.count}" min="1" suffix=" ks" required="true" size="5" >
+                                <p:ajax update="itemGrid"  resetValues="true"  />                           
+                            </p:spinner>
+                            <p:inputText id="inputPriceWithoutVat" disabled="true"  value="#{invoiceBean.item.netPrice}" required="false" size="5" >
+                                <f:convertNumber pattern="##0.00" locale="cs"/> 
+                                <p:ajax update="itemGrid"  resetValues="true"  />
+                            </p:inputText>
+
+                            <p:inputText id="taxRate" value="#{invoiceBean.item.taxRate}" required="true" >
+                                <f:convertNumber pattern="###" locale="cs"/>
+                                <p:ajax event="change" update="itemGrid" resetValues="true"/>
+                            </p:inputText>
 
 
-                                        <p:inputText id="inputPriceWithVat" disabled="true"  value="#{invoiceBean.item.priceWithVat}" required="false" size="5"  >
-                                            <f:convertNumber pattern="##0.00" locale="cs"/> 
-                                            <p:ajax update="itemGrid"  resetValues="true" />
-                                        </p:inputText>
-                                        <p:inputText id="totalAmount" value="#{invoiceBean.item.priceWithVat * invoiceBean.item.invoiceHasItem.count}"
-                                                     label="Cena celkem bez DPH" disabled="true" size="5"  >
-                                            <f:convertNumber pattern="##0.00" locale="cs"/> 
-                                        </p:inputText>
+                            <p:inputText id="inputPriceWithVat" disabled="true"  value="#{invoiceBean.item.fullPrice}" required="false" size="5"  >
+                                <f:convertNumber pattern="##0.00" locale="cs"/> 
+                                <p:ajax update="itemGrid"  resetValues="true" />
+                            </p:inputText>
+                            <p:inputText id="totalAmount" value="#{invoiceBean.item.fullPrice * invoiceBean.item.invoiceHasItem.count}"
+                                         label="Cena celkem bez DPH" disabled="true" size="5"  >
+                                <f:convertNumber pattern="##0.00" locale="cs"/> 
+                            </p:inputText>
 
-                                        <p:commandButton process="itemGrid @parent invoiceItems @parent" id="btnAdd" value="Přidat" 
-                                                         update="invoiceItems @parent itemEror @parent" action="#{invoiceBean.reinit}" >
-                                            <p:collector value="#{invoiceBean.item}" addTo="#{invoiceBean.invoiceItems}" unique="false"/>
-                                            <p:ajax update="invoiceItems"  resetValues="true"  />
-                                        </p:commandButton>
+                            <p:commandButton process="itemGrid @parent invoiceItems @parent" id="btnAdd" value="Přidat" 
+                                             update="invoiceItems @parent itemEror @parent" action="#{invoiceBean.reinit}" >
+                                <p:collector value="#{invoiceBean.item}" addTo="#{invoiceBean.invoiceItems}" unique="false"/>
+                                <p:ajax update="invoiceItems"  resetValues="true"  />
+                            </p:commandButton>
 
-                                    </h:panelGrid>
+                        </h:panelGrid>
 
-                                    <p:outputPanel id="invoiceItems">
+                        <p:outputPanel id="invoiceItems">
 
-                                        <p:dataTable value="#{invoiceBean.invoiceItems}" var="item" id="itemsTable">
+                            <p:dataTable value="#{invoiceBean.invoiceItems}" var="item" id="itemsTable">
 
-                                            <p:column headerText="Kód">
-                                                <h:outputText value="#{item.code}" />
-                                            </p:column>
+                                <p:column headerText="Kód">
+                                    <h:outputText value="#{item.code}" />
+                                </p:column>
 
-                                            <p:column headerText="Položka">
-                                                <h:outputText value="#{item.title}" />
-                                            </p:column>
+                                <p:column headerText="Položka">
+                                    <h:outputText value="#{item.title}" />
+                                </p:column>
 
-                                            <p:column headerText="Cena za kus" width="150">
-                                                <h:outputText value="#{item.price} Kč" />
-                                            </p:column>
+                                <p:column headerText="Cena za kus">
+                                    <h:outputText value="#{item.netPrice} Kč" />
+                                </p:column>
 
-                                            <p:column headerText="Množství" width="150">
-                                                <h:outputText value="#{item.invoiceHasItem.count} ks" />
-                                            </p:column>
+                                <p:column headerText="Sazba DPH">
+                                    <h:outputText value="#{item.taxRate} %" />
+                                </p:column>
 
-                                            <p:column headerText="Akce" width="50">
-                                                <p:commandButton title="Odstranit" update=":form:table:invoiceItems" process=":form:table:invoiceItems" icon="ui-icon-trash">
-                                                    <p:collector value="#{item}" removeFrom="#{invoiceBean.invoiceItems}" unique="true"/>
-                                                </p:commandButton>
-                                            </p:column>
+                                <p:column headerText="Cena včetně DPH">
+                                    <h:outputText value="#{item.fullPrice} Kč" />
+                                </p:column>
 
-                                        </p:dataTable>
+                                <p:column headerText="Množství">
+                                    <h:outputText value="#{item.invoiceHasItem.count} ks" />
+                                </p:column>
 
-                                    </p:outputPanel>    
+                                <p:column headerText="Akce" >
+                                    <p:commandButton title="Odstranit" update=":form:table:invoiceItems" process=":form:table:invoiceItems" icon="ui-icon-trash">
+                                        <p:collector value="#{item}" removeFrom="#{invoiceBean.invoiceItems}" unique="true"/>
+                                    </p:commandButton>
+                                </p:column>
 
-                                </p:fieldset>
+                            </p:dataTable>
 
-                         
+                        </p:outputPanel>    
 
-                            <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
+
+
+
+                        <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
                             <p:menuitem>
                                 <p:commandButton title="Smazat" process="@this" icon="ui-icon-trash" action="#" />
                             </p:menuitem>
@@ -138,7 +172,8 @@
                             </f:facet>
                         </p:menubar>
 
-                  
+                    </p:panel>
+
                 </h:form>
 
                 <ui:include src="/compositions/footer.xhtml" />

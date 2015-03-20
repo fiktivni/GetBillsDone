@@ -12,6 +12,7 @@ import model.beans.InvoiceBean;
 @FacesConverter("personConverter")
 public class PersonConverter implements Converter {
  
+    @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
       
         if(!value.contains("null")) {
@@ -29,6 +30,7 @@ public class PersonConverter implements Converter {
         
     }
  
+    @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object object) {
         if(object != null) {
             return String.valueOf(((Person) object).getId());

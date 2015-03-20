@@ -10,15 +10,15 @@ import controller.Queries;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.Item;
 import model.Person;
 
-@ManagedBean(name = "dashboardBean")
-@ViewScoped
+@SessionScoped
+@Named("dashboardBean")
 public class DashboardBean implements Serializable {
 
     private static List<Invoice> invoices;

@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Nová faktura</title>
+        <link rel="icon" 
+              type="image/png" 
+              href="images/fav.png" />
+        <style type="text/css">
+            .ui-selectonemenu-label{
+                width:70px !important;
+            }
+            .ui-selectonemenu{
+                width:70px !important;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/navigation.xhtml" />
+
+            <h:form id="form">
+
+                <p:panel id="invoice" header="Průvodce tvorbou faktury">
+
+                    <p:growl id="growl" sticky="true" showDetail="true"/>
+
+                    <p:wizard>
+                        <p:tab id="customerTab" title="Zákazník">
+
+                            <p:panel header="Zákazník">
+
+                                <p:messages />
+
+                                <p:selectOneButton value="#{invoiceWizardBean.customerTabOption}">
+                                    <f:selectItem itemLabel="Najít" itemValue="search" />
+                                    <f:selectItem itemLabel="Vytvořit" itemValue="create" />
+                                </p:selectOneButton>
+
+                                <h:panelGrid id="contactGrid" columns="4" cellpadding="5" >
+
+                                    <p:outputLabel value="Hledat: " for="customer" />
+                                    <p:autoComplete id="customer" value="#{invoiceWizardBean.customer}" completeMethod="#{invoiceWizardBean.completeContact}"
+                                                    var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter" forceSelection="true" dropdown="true" >
+                                        <p:ajax event="itemSelect" update="contactGrid" resetValues="true"/>
+                                    </p:autoComplete>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="name" value="Jméno:"/>                   
+                                    <p:inputText id="name" value="#{invoiceWizardBean.customer.name}" required="false" label="Jméno"  />
+                                    <p:outputLabel for="lastName" value="Příjmení:"/>                   
+                                    <p:inputText id="lastName" value="#{invoiceWizardBean.customer.lastname}" required="false" label="Příjmení"  />
+
+                                    <p:outputLabel for="company" value="Firma:"/>                   
+                                    <p:inputText id="company" value="#{invoiceWizardBean.customer.company}" required="false" label="Firma" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="ico" value="IČO:"/>                   
+                                    <p:inputText id="ico" value="#{invoiceWizardBean.customer.ico}" required="false" label="IČO" />
+                                    <p:outputLabel for="dic" value="DIČ:"/>                   
+                                    <p:inputText id="dic" value="#{invoiceWizardBean.customer.dic}" required="false" label="DIČ" />
+
+                                    <p:outputLabel for="bankaccount" value="Bankovní účet:"/>                   
+                                    <p:inputText id="bankaccount" value="#{invoiceWizardBean.customer.bankaccount}" required="false" label="Bankovní účet" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="street" value="Ulice:"/>                   
+                                    <p:inputText id="street" value="#{invoiceWizardBean.customer.street}" required="false" label="Ulice" />
+                                    <p:outputLabel for="city" value="Město:"/>                   
+                                    <p:inputText  id="city" value="#{invoiceWizardBean.customer.city}" required="false" label="Město" />
+
+                                    <p:outputLabel for="pcode" value="PSČ:"/>                   
+                                    <p:inputText id="pcode" value="#{invoiceWizardBean.customer.pcode}" required="false" label="PSČ"/>
+                                    <p:outputLabel for="state" value="Stát:"/>                   
+                                    <p:inputText id="state" value="#{invoiceWizardBean.customer.state}" required="false" label="Stát" />
+
+                                    <p:outputLabel for="email" value="E-mail:"/>                   
+                                    <p:inputText id="email" value="#{invoiceWizardBean.customer.email}" required="false" label="E-mail" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="phone" value="Telefon:"/>                   
+                                    <p:inputText id="phone" value="#{invoiceWizardBean.customer.phone}" required="false" label="Telefon" />
+                                    <p:outputLabel for="fax" value="Fax:"/>                   
+                                    <p:inputText id="fax" value="#{invoiceWizardBean.customer.fax}" required="false" label="Fax" />
+
+                                </h:panelGrid>
+
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab id="addressTab" title="Doručovací adresa">
+                            <p:panel header="Doručovací adresa">
+                                <p:messages />
+                                
+                                Void
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab id="itemsTab" title="Položky">
+                            <p:panel header="Položky">
+                                <p:messages />
+                                
+                                Void
+                                
+                            </p:panel>
+                        </p:tab>
+
+                        <p:tab id="confirm" title="Souhrn">
+                            <p:panel header="Sourhn">
+                               
+                                Void
+                                
+                            </p:panel>
+                        </p:tab>
+                    </p:wizard>
+
+                </p:panel>
+
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+
+        </div>
+
+    </h:body>
+
+    <script type="text/javascript">
+        PrimeFaces.locales ['cs'] = {
+            closeText: 'Zavřít',
+            prevText: 'Předchozí',
+            nextText: 'Další', monthNames: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', '�?íjen', 'Listopad', 'Prosinec'],
+            monthNamesShort: ['Led', 'Ún', 'Bře', 'Dub', 'Kvě', 'Čer', 'Čerec', 'Srp', 'Zář', '�?íj', 'Lis', 'Pro'],
+            dayNames: ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
+            dayNamesShort: ['Ne', 'Po', 'Út', 'Stř', 'Čt', 'Pá', 'So'],
+            dayNamesMin: ['Ne', 'Po', 'Út', 'Stř', 'Čt', 'Pá', 'So'],
+            weekHeader: 'Týden',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: '',
+            timeOnlyTitle: 'Pouze čas',
+            timeText: 'Čas',
+            hourText: 'Hodina',
+            minuteText: 'Minuta',
+            secondText: 'Vteřina',
+            currentText: 'Aktuální datum',
+            ampm: false,
+            month: 'Měsíc',
+            week: 'týden',
+            day: 'den',
+            allDayText: 'Celý den'
+        };
+    </script>
+
+
+</html>
+

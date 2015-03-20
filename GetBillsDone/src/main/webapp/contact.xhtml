@@ -31,40 +31,34 @@
                     <h:panelGrid id="grid" columns="4" cellpadding="5" style="margin: auto;">
 
                         <p:outputLabel for="name" value="Jméno:"/>                   
-                        <p:inputText id="name" value="#{contactBean.contact.name}" required="false" label="Jméno" validatorMessage="Chyba" />
+                        <p:inputText id="name" value="#{contactBean.contact.name}" required="false" label="Jméno"  />
                         <p:outputLabel for="lastName" value="Příjmení:"/>                   
-                        <p:inputText id="lastName" value="#{contactBean.contact.lastname}" required="false" label="Příjmení" validatorMessage="Chyba" />
+                        <p:inputText id="lastName" value="#{contactBean.contact.lastname}" required="false" label="Příjmení"  />
 
                         <p:outputLabel for="company" value="Firma:"/>                   
-                        <p:inputText id="company" value="#{contactBean.contact.company}" required="false" label="Firma" validatorMessage="Chyba" />
+                        <p:inputText id="company" value="#{contactBean.contact.company}" required="false" label="Firma" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
                         <p:outputLabel for="ico" value="IČO:"/>                   
-                        <p:inputText id="ico" value="#{contactBean.contact.ico}" required="false" label="IČO" validatorMessage="Chyba" />
+                        <p:inputText id="ico" value="#{contactBean.contact.ico}" required="false" label="IČO" />
                         <p:outputLabel for="dic" value="DIČ:"/>                   
-                        <p:inputText id="dic" value="#{contactBean.contact.dic}" required="false" label="DIČ" validatorMessage="Chyba" />
+                        <p:inputText id="dic" value="#{contactBean.contact.dic}" required="false" label="DIČ" />
 
-                        <p:outputLabel for="bankaccount" value="Číslo účtu:"/>                   
-                        <p:inputText id="bankaccount" value="#{contactBean.contact.bankaccount}" required="false" label="Číslo účtu" />
+                        <p:outputLabel for="bankaccount" value="Bankovní účet:"/>                   
+                        <p:inputText id="bankaccount" value="#{contactBean.contact.bankaccount}" required="false" label="Bankovní účet" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
                         <p:outputLabel for="street" value="Ulice:"/>                   
-                        <p:inputText id="street" value="#{contactBean.contact.street}" required="false" label="Ulice" validatorMessage="Chyba"/>
-                        <p:outputLabel for="house" value="Číslo:"/>                   
-                        <p:inputText id="house" value="#{contactBean.contact.house}" required="false" label="Číslo" validatorMessage="Chyba"/>
-
+                        <p:inputText id="street" value="#{contactBean.contact.street}" required="false" label="Ulice" />
+                        <p:outputLabel for="city" value="Město:"/>                   
+                        <p:inputText  id="city" value="#{contactBean.contact.city}" required="false" label="Město" />
 
                         <p:outputLabel for="pcode" value="PSČ:"/>                   
-                        <p:inputText id="pcode" value="#{contactBean.contact.pcode}" required="false" label="PSČ" validatorMessage="Chyba: PSČ musí být pětimístné číslo např. 37001"/>
-                        <p:outputLabel for="city" value="Město:"/>                   
-                        <p:inputText  id="city" value="#{contactBean.contact.city}" required="false" label="Město" validatorMessage="Chyba"/>
-
+                        <p:inputText id="pcode" value="#{contactBean.contact.pcode}" required="false" label="PSČ"/>
                         <p:outputLabel for="state" value="Stát:"/>                   
                         <p:inputText id="state" value="#{contactBean.contact.state}" required="false" label="Stát" />
-                        <p:spacer></p:spacer>
-                        <p:spacer></p:spacer>
 
                         <p:outputLabel for="email" value="E-mail:"/>                   
                         <p:inputText id="email" value="#{contactBean.contact.email}" required="false" label="E-mail" />
