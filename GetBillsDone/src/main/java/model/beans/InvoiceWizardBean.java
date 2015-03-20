@@ -31,7 +31,7 @@ public class InvoiceWizardBean implements Serializable{
     private final int userId = getUserID();
     private List<Person> contacts = new ArrayList<>();
     private String customerTabOption = "search";
-
+    
     @PostConstruct
     public void init() {
         invoice = new Invoice();
