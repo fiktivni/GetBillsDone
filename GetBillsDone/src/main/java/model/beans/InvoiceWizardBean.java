@@ -12,31 +12,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.Person;
+import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author tempest
  */
 @SessionScoped
-@Named("invoiceWizardBean")
-public class InvoiceWizardBean implements Serializable{
+@ManagedBean(name = "invoiceWizardBean")
+public class InvoiceWizardBean implements Serializable {
 
     private Invoice invoice = new Invoice();
     private Person customer = new Person();
+    private Person address = new Person();
     private final int userId = getUserID();
     private List<Person> contacts = new ArrayList<>();
-    private String customerTabOption = "search";
+
+    private String customerOption;
+    private boolean renderSearchCustomer;
+    private boolean renderCreateCustomer;
     
+    private String addressOption;
+    private boolean renderSearchAddress;
+    private boolean renderCreateAddress;
+
     @PostConstruct
     public void init() {
         invoice = new Invoice();
         customer = new Person();
+        address = new Person();
         contacts = Queries.getPersonsAtAccountId("" + userId);
+        
+        customerOption = "search";
+        renderSearchCustomer = customerOption.equals("search");
+        renderCreateCustomer = customerOption.equals("create");
+        
+        addressOption = "search";
+        renderSearchAddress = customerOption.equals("search");
+        renderCreateAddress = customerOption.equals("create");
     }
 
     public Invoice getInvoice() {
@@ -55,6 +73,14 @@ public class InvoiceWizardBean implements Serializable{
         this.customer = customer;
     }
 
+    public Person getAddress() {
+        return address;
+    }
+
+    public void setAddress(Person address) {
+        this.address = address;
+    }
+
     public List<Person> getContacts() {
         return contacts;
     }
@@ -63,12 +89,53 @@ public class InvoiceWizardBean implements Serializable{
         this.contacts = contacts;
     }
 
-    public String getCustomerTabOption() {
-        return customerTabOption;
+    public String getCustomerOption() {
+        return customerOption;
     }
 
-    public void setCustomerTabOption(String customerTabOption) {
-        this.customerTabOption = customerTabOption;
+    public void setCustomerOption(String customerOption) {
+        this.customerOption = customerOption;
+    }
+
+    public boolean isRenderSearchCustomer() {
+        return renderSearchCustomer;
+    }
+
+    public void setRenderSearchCustomer(boolean renderSearchCustomer) {
+
+        this.renderSearchCustomer = renderSearchCustomer;
+    }
+
+    public boolean isRenderCreateCustomer() {
+        return renderCreateCustomer;
+    }
+
+    public void setRenderCreateCustomer(boolean renderCreateCustomer) {
+        this.renderCreateCustomer = renderCreateCustomer;
+    }
+
+    public String getAddressOption() {
+        return addressOption;
+    }
+
+    public void setAddressOption(String addressOption) {
+        this.addressOption = addressOption;
+    }
+
+    public boolean isRenderSearchAddress() {
+        return renderSearchAddress;
+    }
+
+    public void setRenderSearchAddress(boolean renderSearchAddress) {
+        this.renderSearchAddress = renderSearchAddress;
+    }
+
+    public boolean isRenderCreateAddress() {
+        return renderCreateAddress;
+    }
+
+    public void setRenderCreateAddress(boolean renderCreateAddress) {
+        this.renderCreateAddress = renderCreateAddress;
     }
 
     private int getUserID() {
@@ -79,7 +146,7 @@ public class InvoiceWizardBean implements Serializable{
         }
         return userID;
     }
-    
+
     public List<Person> completeContact(String query) {
 
         List<Person> found = new ArrayList<>();
@@ -99,4 +166,19 @@ public class InvoiceWizardBean implements Serializable{
         return found;
     }
 
+    public void switchCustomerOption() {
+        renderSearchCustomer = customerOption.equals("search");
+        renderCreateCustomer = customerOption.equals("create");
+        customer = new Person();
+        RequestContext.getCurrentInstance().update("form:customerPanel");
+
+    }
+    
+    public void switchAddressOption() {
+        renderSearchAddress = addressOption.equals("search");
+        renderCreateAddress = addressOption.equals("create");
+        address = new Person();
+        RequestContext.getCurrentInstance().update("form:addressPanel");
+
+    }
 }

@@ -22,7 +22,7 @@
                             <p:commandButton title="Nová faktura" action="invoice" icon="ui-icon-document" />
                         </p:menuitem>
                         <p:menuitem>
-                            <p:commandButton title="Nová faktura 2" action="invoiceWizard" icon="ui-icon-document" />
+                            <p:commandButton title="Nová faktura 2" actionListener="#{invoiceWizardBean.init}" action="invoiceWizard" icon="ui-icon-document" />
                         </p:menuitem>
                         <p:menuitem>
                             <p:commandButton title="Import" action="importInvoice" icon="ui-icon-arrowthickstop-1-n" />

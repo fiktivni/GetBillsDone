@@ -12,6 +12,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.servlet.http.HttpSession;
 import model.Person;
+import model.beans.InvoiceWizardBean;
 
 @FacesConverter("personWizardConverter")
 @ManagedBean
@@ -19,11 +20,11 @@ import model.Person;
 public class PersonWizardConverter implements Converter, Serializable {
 
     private List<Person> contacts = new ArrayList<>();
-    private final String userId = getUserID();
+    //private final String userId = getUserID();
     
     @PostConstruct
     public void init() {
-        contacts = Queries.getPersonsAtAccountId(userId);
+        //contacts = Queries.getPersonsAtAccountId(userId);
     }
     
     @Override
@@ -32,6 +33,9 @@ public class PersonWizardConverter implements Converter, Serializable {
         if (!value.contains("null")) {
             
             int personId = Integer.parseInt(value);
+            
+            InvoiceWizardBean service = (InvoiceWizardBean) fc.getExternalContext().getSessionMap().get("invoiceWizardBean");
+            contacts = service.getContacts();
             
             for (Person p : contacts) {
                 if (p.getId() == personId) {
