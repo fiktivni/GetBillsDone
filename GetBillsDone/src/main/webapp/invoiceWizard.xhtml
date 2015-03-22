@@ -21,8 +21,8 @@
                 padding: 10px;
             }
             .content{
-                 width: 245px;
-                 font-weight: bolder;
+                width: 245px;
+                font-weight: bolder;
             }
         </style>
     </h:head>
@@ -39,7 +39,7 @@
 
                     <p:growl id="growl" sticky="true" showDetail="true"/>
 
-                    <p:wizard>
+                    <p:wizard flowListener="#{invoiceWizardBean.onFlowProcess}">
                         <p:tab id="customerTab" title="Zákazník">
 
                             <p:panel id="customerPanel" header="Zákazník">
@@ -147,11 +147,13 @@
 
                                 </h:panelGrid>
 
+                                <h:outputText value="Doručovací adresa je stejná: " />
+                                <p:selectBooleanCheckbox value="#{invoiceWizardBean.skip}" />
                             </p:panel>
                         </p:tab>
 
                         <p:tab id="addressTab" title="Doručovací adresa">
-                            
+
                             <p:panel id="addressPanel" header="Doručovací adresa">
 
                                 <h:panelGrid columns="2" cellpadding="5" >
@@ -268,7 +270,7 @@
                             </p:panel>
                         </p:tab>
 
-                        <p:tab id="confirm" title="Souhrn">
+                        <p:tab id="confirmTab" title="Souhrn">
                             <p:panel header="Sourhn">
 
                                 Void

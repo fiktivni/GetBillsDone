@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.Person;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FlowEvent;
 
 /**
  *
@@ -40,6 +41,8 @@ public class InvoiceWizardBean implements Serializable {
     private String addressOption;
     private boolean renderSearchAddress;
     private boolean renderCreateAddress;
+    
+    private boolean skip;
 
     @PostConstruct
     public void init() {
@@ -55,6 +58,8 @@ public class InvoiceWizardBean implements Serializable {
         addressOption = "search";
         renderSearchAddress = customerOption.equals("search");
         renderCreateAddress = customerOption.equals("create");
+        
+        skip = false;
     }
 
     public Invoice getInvoice() {
@@ -138,6 +143,14 @@ public class InvoiceWizardBean implements Serializable {
         this.renderCreateAddress = renderCreateAddress;
     }
 
+    public boolean isSkip() {
+        return skip;
+    }
+
+    public void setSkip(boolean skip) {
+        this.skip = skip;
+    }
+
     private int getUserID() {
         HttpSession s = HttpSessionUtil.getSession();
         int userID = -1;
@@ -164,6 +177,17 @@ public class InvoiceWizardBean implements Serializable {
         }
 
         return found;
+    }
+    
+    public String onFlowProcess(FlowEvent event) {
+        if(skip) {
+            skip = false;   //reset in case user goes back
+            address = customer;
+            return "itemsTab";
+        }
+        else {
+            return event.getNewStep();
+        }
     }
 
     public void switchCustomerOption() {
