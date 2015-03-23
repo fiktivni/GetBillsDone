@@ -40,11 +40,39 @@
                     <p:growl id="growl" sticky="true" showDetail="true"/>
 
                     <p:wizard flowListener="#{invoiceWizardBean.onFlowProcess}">
+
+                        <p:tab id="headTab" title="Hlavička">
+                            <p:panel id="headPanel" header="Hlavička">
+
+                                <h:panelGrid id="details" columns="3"  cellpadding="5" >
+
+                                    <p:outputLabel for="created" value="Datum vystavení:"/>
+                                    <p:outputLabel for="duzp" value="DUZP:"/>
+                                    <p:outputLabel for="due" value="Splatnost:"/>    
+                                    <p:calendar id="created" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.created}" showOn="button" required="true" label="Datum vystavení" />                  
+                                    <p:calendar id="duzp" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.duzp}" required="true" showOn="button" label="DUZP"/>
+                                    <p:calendar id="due" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.due}" required="true" showOn="button" label="Splatnost"/>                
+
+
+                                    <p:outputLabel value="Forma platby:" for="method" />
+                                    <p:outputLabel for="invoiceNumber" value="Číslo faktury:"/>
+                                    <p:outputLabel />
+                                    <p:autoComplete id="method"  value="#{invoiceWizardBean.method}" required="true" completeMethod="#{invoiceWizardBean.completeMethod}" dropdown="true" 
+                                                    var="method" itemLabel="#{method.title}" itemValue="#{method}" converter="methodWizardConverter" forceSelection="true"  >
+                                        <!--<p:ajax event="itemSelect" update="details"  resetValues="false"  />-->
+                                    </p:autoComplete>
+                                    <p:inputText id="invoiceNumber" value="#{invoiceWizardBean.invoice.invoicenumber}" required="true" label="Číslo faktury" disabled="true"/>        
+
+                                </h:panelGrid>
+
+                            </p:panel>
+                        </p:tab>
+
                         <p:tab id="customerTab" title="Zákazník">
 
                             <p:panel id="customerPanel" header="Zákazník">
 
-                                <h:panelGrid columns="2" cellpadding="5" >
+                                <h:panelGrid columns="3" cellpadding="5" >
                                     <p:selectOneButton value="#{invoiceWizardBean.customerOption}">
                                         <f:selectItem itemLabel="Vytvořit" itemValue="create" />
                                         <f:selectItem itemLabel="Hledat" itemValue="search" />
@@ -52,9 +80,11 @@
                                     </p:selectOneButton>
                                     <p:autoComplete id="customer" value="#{invoiceWizardBean.customer}" completeMethod="#{invoiceWizardBean.completeContact}"
                                                     var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
-                                                    forceSelection="true" dropdown="true" rendered="#{invoiceWizardBean.renderSearchCustomer}">
+                                                    forceSelection="true" dropdown="true" rendered="#{invoiceWizardBean.renderSearchCustomer}"
+                                                    required="true">
                                         <p:ajax event="itemSelect" update="customerGrid" resetValues="true"/>
                                     </p:autoComplete>
+
                                 </h:panelGrid>
 
                                 <p:messages />
@@ -147,8 +177,8 @@
 
                                 </h:panelGrid>
 
-                                <h:outputText value="Doručovací adresa je stejná: " />
-                                <p:selectBooleanCheckbox value="#{invoiceWizardBean.skip}" />
+                                <p:selectBooleanCheckbox value="#{invoiceWizardBean.skip}" itemLabel="Doručovací adresa je stejná:" style="padding: 5px;"/>
+
                             </p:panel>
                         </p:tab>
 
@@ -164,7 +194,8 @@
                                     </p:selectOneButton>
                                     <p:autoComplete id="address" value="#{invoiceWizardBean.address}" completeMethod="#{invoiceWizardBean.completeContact}"
                                                     var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
-                                                    forceSelection="true" dropdown="true" rendered="#{invoiceWizardBean.renderSearchAddress}">
+                                                    forceSelection="true" dropdown="true" rendered="#{invoiceWizardBean.renderSearchAddress}"
+                                                    required="true">
                                         <p:ajax event="itemSelect" update="addressGrid" resetValues="true"/>
                                     </p:autoComplete>
                                 </h:panelGrid>
@@ -262,10 +293,186 @@
                         </p:tab>
 
                         <p:tab id="itemsTab" title="Položky">
-                            <p:panel header="Položky">
-                                <p:messages />
+                            <p:panel id="itemPanel" header="Položky">
+                                
+                                <p:selectOneButton value="#{invoiceWizardBean.itemOption}" style="float:right">
+                                    <f:selectItem itemLabel="Vytvořit" itemValue="create" />
+                                    <f:selectItem itemLabel="Hledat" itemValue="search" />
+                                    <p:ajax update="customerGrid" listener="#{invoiceWizardBean.switchItemOption}" />
+                                </p:selectOneButton>
 
-                                Void
+                                <p:messages />
+                                
+                                <h:panelGrid id="searchItemGrid" columns="5" cellpadding="5" rendered="#{invoiceWizardBean.renderSearchItem}">
+
+                                    <p:outputLabel for="searchItemCode" value="Kód:"/>
+                                    <p:autoComplete id="searchItemCode" value="#{invoiceWizardBean.item}" completeMethod="#{invoiceWizardBean.completeItemCode}"
+                                                    var="item" itemLabel="#{item.code}" itemValue="#{item}" converter="itemWizardConverter"
+                                                    forceSelection="true" required="true" dropdown="false">
+                                        <p:ajax event="itemSelect" update="searchItemGrid" resetValues="true"/>
+                                    </p:autoComplete>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="searchItemTitle" value="Položka:"/>
+                                    <p:autoComplete id="searchItemTitle" value="#{invoiceWizardBean.item}" completeMethod="#{invoiceWizardBean.completeItemTitle}"
+                                                    var="item" itemLabel="#{item.title}" itemValue="#{item}" converter="itemWizardConverter"
+                                                    forceSelection="true" required="true" dropdown="false">
+                                        <p:ajax event="itemSelect" update="searchItemGrid" resetValues="true"/>
+                                    </p:autoComplete>
+                                    <p:outputLabel for="searchItemCount" value="Množství:"/>
+                                    <p:spinner id="searchItemCount" value="#{invoiceWizardBean.item.invoiceHasItem.count}" min="1" suffix=" ks" required="true" >
+                                        <p:ajax update="searchItemGrid" resetValues="true"  />                           
+                                    </p:spinner>
+                                    <p:commandButton process="searchItemGrid" id="searchItemAddBtn" value="Přidat" 
+                                                     update="itemPanel" action="#{invoiceWizardBean.addItem}" resetValues="true">
+                                        <!--<p:ajax update="itemPanel" resetValues="true"  />-->
+                                    </p:commandButton>
+
+                                    <p:outputLabel value="DPH:"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.taxRate} %" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel value="Jedn.&nbsp;cena (bez&nbsp;DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.netPrice}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:outputLabel value="Celkem (bez&nbsp;DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.netPrice * invoiceWizardBean.item.invoiceHasItem.count}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel value="Jedn.&nbsp;cena (s&nbsp;DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.fullPrice}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:outputLabel value="Celkem (s&nbsp;DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.fullPrice * invoiceWizardBean.item.invoiceHasItem.count}">
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:spacer></p:spacer>
+
+                                </h:panelGrid>
+
+                                <h:panelGrid id="createItemGrid" columns="5" cellpadding="5" rendered="#{invoiceWizardBean.renderCreateItem}">
+
+                                    <p:outputLabel for="createItemCode" value="Kód:"/>
+                                    <p:inputText id="createItemCode" value="#{invoiceWizardBean.item.code}" required="true" label="Kód">
+                                        <p:ajax event="change" update="createItemGrid" resetValues="false"/>
+                                    </p:inputText>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="createItemTitle" value="Položka:"/>
+                                    <p:inputText id="createItemTitle" value="#{invoiceWizardBean.item.title}" required="true" label="Položka" >
+                                        <p:ajax event="change" update="createItemGrid" resetValues="false"/>
+                                    </p:inputText>
+                                    <p:outputLabel for="createItemCount" value="Množství:"/>
+                                    <p:spinner id="createItemCount" value="#{invoiceWizardBean.item.invoiceHasItem.count}" min="1" suffix=" ks" required="true" >
+                                        <p:ajax update="createItemGrid" resetValues="true"  />                           
+                                    </p:spinner>
+                                    <p:commandButton process="createItemGrid" id="createItemAddBtn" value="Přidat" 
+                                                     update="itemPanel" action="#{invoiceWizardBean.addItem}" resetValues="true">
+                                        <!--<p:ajax update="itemPanel" resetValues="true"  />-->
+                                    </p:commandButton>
+
+                                    <p:outputLabel for="createItemTaxRate" value="DPH:"/>
+                                    <p:inputText id="createItemTaxRate" value="#{invoiceWizardBean.item.taxRate}" required="true" label="Položka">
+                                        <f:convertNumber pattern="##0" locale="cs"/>
+                                        <p:ajax event="change" update="createItemGrid" />
+                                    </p:inputText>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="createItemNetPrice" value="Jedn.&nbsp;cena (bez&nbsp;DPH):"/>
+                                    <p:inputText id="createItemNetPrice" value="#{invoiceWizardBean.item.netPrice}" required="true">
+                                        <f:convertNumber pattern="##0.00" locale="cs"/>
+                                        <p:ajax event="change" update="createItemGrid"  />
+                                    </p:inputText>
+                                    <p:outputLabel value="Celkem (bez&nbsp;DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.netPrice * invoiceWizardBean.item.invoiceHasItem.count}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:spacer></p:spacer>
+
+                                    <p:outputLabel for="createItemFullPrice" value="Jedn.&nbsp;cena (s&nbsp;DPH):"/>
+                                    <p:inputText id="createItemFullPrice" value="#{invoiceWizardBean.item.fullPrice}" required="true" >
+                                        <f:convertNumber pattern="##0.00" locale="cs"/>
+                                        <p:ajax event="change" update="createItemGrid"  />
+                                    </p:inputText>
+                                    <p:outputLabel value="Celkem (s&nbsp;DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.item.fullPrice * invoiceWizardBean.item.invoiceHasItem.count}">
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:spacer></p:spacer>
+
+
+                                </h:panelGrid>
+
+                                <p:dataTable value="#{invoiceWizardBean.addedItems}" var="item" id="itemsTable" style="margin: 10px 0 10px 0;">
+
+                                    <p:column headerText="Kód">
+                                        <h:outputText value="#{item.code}" />
+                                    </p:column>
+
+                                    <p:column headerText="Položka">
+                                        <h:outputText value="#{item.title}" />
+                                    </p:column>
+
+                                    <p:column headerText="DPH" width="45" style="text-align: right;">
+                                        <h:outputText value="#{item.taxRate} %" />
+                                    </p:column>
+
+                                    <p:column headerText="Jedn.&nbsp;cena (bez&nbsp;DPH)" style="text-align: right;">
+                                        <h:outputText value="#{item.netPrice}" >
+                                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Jedn.&nbsp;cena (s&nbsp;DPH)" style="text-align: right;">
+                                        <h:outputText value="#{item.fullPrice}" >
+                                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Mn." width="45" style="text-align: right;">
+                                        <h:outputText value="#{item.invoiceHasItem.count} ks" />
+                                    </p:column>
+
+                                    <p:column headerText="Celkem (s&nbsp;DPH)" style="text-align: right;">
+                                        <h:outputText value="#{item.fullPrice * item.invoiceHasItem.count}" >
+                                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Akce" width="45">
+                                        <p:commandButton title="Odstranit" update="itemsTable" process="itemsTable" icon="ui-icon-trash" actionListener="#{invoiceWizardBean.updateItemPanel}">
+                                            <p:collector value="#{item}" removeFrom="#{invoiceWizardBean.addedItems}" unique="true"/>
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+                                <h:panelGrid id="sumItemGrid" columns="2" cellpadding="5" style="font-weight: bolder;">
+                                    <p:outputLabel value="Celkem (bez DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumNetPrice}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <p:outputLabel value="Celkem (s DPH):"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumFullPrice}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                </h:panelGrid>
+
+
+
 
                             </p:panel>
                         </p:tab>

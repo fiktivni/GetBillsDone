@@ -16,7 +16,7 @@ public class Item implements java.io.Serializable {
 
     public Item() {
         this.invoiceHasItem = new InvoiceHasItem();
-
+        invoiceHasItem.setCount(1);
     }
 
     public Item(int accountIdaccount, int taxRate, String title, double netPrice, double fullPrice, String code) {
@@ -27,6 +27,7 @@ public class Item implements java.io.Serializable {
         this.fullPrice = fullPrice;
         this.code = code;
         this.invoiceHasItem = new InvoiceHasItem();
+        invoiceHasItem.setCount(1);
     }
 
     public Integer getId() {
