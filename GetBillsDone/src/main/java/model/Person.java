@@ -25,6 +25,7 @@ public class Person implements java.io.Serializable {
     private String bankaccount;
     private Integer ico;
     private String dic;
+    private String pscAndCityInOneLine;
 
     public Person() {
         this.name = "";
@@ -245,6 +246,18 @@ public class Person implements java.io.Serializable {
      */
     public void setHouse(String house) {
         this.house = house;
+    }
+
+    public String getPscAndCityInOneLine() {
+        if (pcode != null && city != null){
+            return pcode + " " + city;
+        } else {
+            return "";
+        }
+    }
+
+    public void setPscAndCityInOneLine(String pscAndCityInOneLine) {
+        this.pscAndCityInOneLine = pscAndCityInOneLine;
     }
 
 }

@@ -7,20 +7,26 @@ package model.beans;
 
 import controller.HttpSessionUtil;
 import controller.Queries;
+import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.InvoiceHasItem;
+import model.InvoiceHasPerson;
 import model.Item;
 import model.Method;
 import model.Person;
+import net.sf.jasperreports.engine.JRException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FlowEvent;
 
@@ -38,6 +44,7 @@ public class InvoiceWizardBean implements Serializable {
     private Method method = new Method();
     private Item item = new Item();
     private final int userId = getUserID();
+    private Person user = new Person();
     private List<Person> contacts = new ArrayList<>();
     private List<Method> methods = new ArrayList();
     private List<Invoice> invoices = new ArrayList();
@@ -56,10 +63,11 @@ public class InvoiceWizardBean implements Serializable {
     private boolean renderSearchItem;
     private boolean renderCreateItem;
 
-    private boolean skip;
+    private boolean isSingleAddress;
 
     private double sumNetPrice = 0;
     private double sumFullPrice = 0;
+    private double sumTax = 0;
 
     @PostConstruct
     public void init() {
@@ -72,6 +80,7 @@ public class InvoiceWizardBean implements Serializable {
         invoices = Queries.getInvoices(userId);
         allItems = Queries.getItemsAtAccountId("" + userId);
         addedItems = new ArrayList<>();
+        user = Queries.getUser("" + userId);
 
         sumNetPrice = 0;
         sumFullPrice = 0;
@@ -88,7 +97,7 @@ public class InvoiceWizardBean implements Serializable {
         renderSearchItem = itemOption.equals("search");
         renderCreateItem = itemOption.equals("create");
 
-        skip = false;
+        isSingleAddress = true;
 
         Calendar cal = Calendar.getInstance();
         invoice.setCreated(cal.getTime());
@@ -97,11 +106,23 @@ public class InvoiceWizardBean implements Serializable {
         invoice.setDue(cal.getTime());
         invoice.setAccountIdaccount(userId);
         invoice.setStateIdstate(1);
-        invoice.setInvoicenumber(invoices.size() + 1);
+        invoice.setInvoicenumber(cal.get(Calendar.YEAR) * 100000 + invoices.size() + 1);
+        invoice.setConstantsymbol(308);
+        invoice.setVariablesymbol(invoice.getInvoicenumber());
+        
+        method = methods.get(1);
 
         address.setAccountIdaccount(userId);
         customer.setAccountIdaccount(userId);
         item.setAccountIdaccount(userId);
+    }
+
+    public Person getUser() {
+        return user;
+    }
+
+    public void setUser(Person user) {
+        this.user = user;
     }
 
     public Invoice getInvoice() {
@@ -249,12 +270,12 @@ public class InvoiceWizardBean implements Serializable {
         this.renderCreateItem = renderCreateItem;
     }
 
-    public boolean isSkip() {
-        return skip;
+    public boolean isIsSingleAddress() {
+        return isSingleAddress;
     }
 
-    public void setSkip(boolean skip) {
-        this.skip = skip;
+    public void setIsSingleAddress(boolean isSingleAddress) {
+        this.isSingleAddress = isSingleAddress;
     }
 
     public double getSumNetPrice() {
@@ -268,6 +289,15 @@ public class InvoiceWizardBean implements Serializable {
 
     public void setSumNetPrice(double sumNetPrice) {
         this.sumNetPrice = sumNetPrice;
+    }
+
+    public double getSumTax() {
+        sumTax = sumFullPrice - sumNetPrice;
+        return sumTax;
+    }
+
+    public void setSumTax(double sumTax) {
+        this.sumTax = sumTax;
     }
 
     public double getSumFullPrice() {
@@ -310,6 +340,20 @@ public class InvoiceWizardBean implements Serializable {
             item = new Item();
             item.setAccountIdaccount(userId);
         }
+    }
+    
+    public void addNewItem(){
+        saveItem();
+        addItem();
+    }
+    
+    public void saveItem(){
+        if (item.getId() == null) {
+            Queries.createItem(item);
+        } else {
+            Queries.updateItem(item);
+        }
+        allItems = Queries.getItemsAtAccountId("" + userId);
     }
 
     public List<Person> completeContact(String query) {
@@ -389,9 +433,8 @@ public class InvoiceWizardBean implements Serializable {
     }
 
     public String onFlowProcess(FlowEvent event) {
-        if (skip) {
-            skip = false;   //reset in case user goes back
-            address = customer;
+        if (isSingleAddress && (event.getOldStep().equals("customerTab")) && (!event.getNewStep().equals("headTab"))) {
+            updateAddress();
             return "itemsTab";
         } else {
             return event.getNewStep();
@@ -412,7 +455,7 @@ public class InvoiceWizardBean implements Serializable {
         renderCreateAddress = addressOption.equals("create");
         address = new Person();
         address.setAccountIdaccount(userId);
-
+        isSingleAddress = true;
         RequestContext.getCurrentInstance().update("form:addressPanel");
     }
 
@@ -427,5 +470,73 @@ public class InvoiceWizardBean implements Serializable {
     
     public void updateItemPanel(){
         RequestContext.getCurrentInstance().update("form:itemPanel");
+    }
+    
+    public void updateAddress(){
+        if(isSingleAddress){
+            address = customer;
+            
+        } else {
+            address = new Person();
+            address.setAccountIdaccount(userId);
+        }
+        RequestContext.getCurrentInstance().update("form:addressPanel");
+    }
+    
+    public String convertDate(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        return formatter.format(date);
+    }
+    
+    public String saveInvoice() {
+
+        Double total = getSumFullPrice();
+
+        /*
+         Save invoice and return her ID to variable
+         */
+        invoice.setStateIdstate(1);
+        invoice.setMethodIdmethod(method.getId());
+        invoice.setTotal(total.intValue());
+        invoice.setId(Queries.createInvoice(invoice));
+
+        Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), userId, 1));
+
+        /*
+         Save recipient, customer and fill invoice with their ID and return her ID to variable
+         */
+        customer.setIsowner(false);
+        if(customer.getId() == null){
+            customer.setId(Queries.createPerson(customer));
+        }
+        Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), customer.getId(), 2));
+
+        if(isSingleAddress){
+            Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), customer.getId(), 3));
+        } else {
+            if(address.getId() == null){
+                address.setId(Queries.createPerson(address));
+            }
+            Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), address.getId(), 3));
+        }
+        
+        for(Item i : addedItems){           
+            Queries.createItem(i);
+            i.getInvoiceHasItem().setInvoiceIdinvoice(invoice.getId());
+            i.getInvoiceHasItem().setItemIditem(i.getId());
+            Queries.createInvoiceHasItem(i.getInvoiceHasItem());            
+        }
+        
+        return "invoices";
+    }
+    
+    public void printInvoice(ActionEvent actionEvent) throws IOException, JRException {
+        
+        if(invoice.getId() == null){
+            saveInvoice();
+        }
+         
+        controller.Printer.printInvoice(actionEvent, invoice, addedItems, user, customer, address);
+       
     }
 }

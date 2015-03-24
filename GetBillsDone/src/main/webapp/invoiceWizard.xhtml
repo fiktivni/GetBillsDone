@@ -6,23 +6,20 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Nová faktura</title>
+        <title>Faktura #{invoiceWizardBean.invoice.invoicenumber}</title>
         <link rel="icon" 
               type="image/png" 
               href="images/fav.png" />
         <style type="text/css">
-            .ui-selectonemenu-label{
-                width:70px !important;
-            }
-            .ui-selectonemenu{
-                width:70px !important;
+            .h2{
+                font-weight: bolder;
+                font-size: larger;
             }
             .label{
-                padding: 10px;
+                width: 175px;
             }
-            .content{
-                width: 245px;
-                font-weight: bolder;
+            .value{
+                width: 320px;
             }
         </style>
     </h:head>
@@ -35,7 +32,7 @@
 
             <h:form id="form">
 
-                <p:panel id="invoice" header="Průvodce tvorbou faktury">
+                <p:panel id="invoice" header="Faktura #{invoiceWizardBean.invoice.invoicenumber}">
 
                     <p:growl id="growl" sticky="true" showDetail="true"/>
 
@@ -44,24 +41,58 @@
                         <p:tab id="headTab" title="Hlavička">
                             <p:panel id="headPanel" header="Hlavička">
 
-                                <h:panelGrid id="details" columns="3"  cellpadding="5" >
+                                <p:messages />
 
-                                    <p:outputLabel for="created" value="Datum vystavení:"/>
-                                    <p:outputLabel for="duzp" value="DUZP:"/>
-                                    <p:outputLabel for="due" value="Splatnost:"/>    
-                                    <p:calendar id="created" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.created}" showOn="button" required="true" label="Datum vystavení" />                  
-                                    <p:calendar id="duzp" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.duzp}" required="true" showOn="button" label="DUZP"/>
-                                    <p:calendar id="due" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.due}" required="true" showOn="button" label="Splatnost"/>                
+                                <h:panelGrid id="details" columns="2" >
+
+                                    <h:panelGrid columns="2" >
+
+                                        <p:outputLabel for="method" value="Platební metoda:" />
+                                        <p:autoComplete id="method"  value="#{invoiceWizardBean.method}" required="true" completeMethod="#{invoiceWizardBean.completeMethod}" dropdown="true" 
+                                                        var="method" itemLabel="#{method.title}" itemValue="#{method}" converter="methodWizardConverter" forceSelection="true"  style="margin-right: 45px;">
+                                            <!--<p:ajax event="itemSelect" update="details"  resetValues="false"  />-->
+                                        </p:autoComplete>
+
+                                        <p:outputLabel value="Bankovní účet:"/>
+                                        <h:outputText value="#{invoiceWizardBean.user.bankaccount}" />
+
+                                        <p:outputLabel for="vs" value="VS:"/>
+                                        <p:inputText id="vs" value="#{invoiceWizardBean.invoice.variablesymbol}" required="true" >
+                                            <f:convertNumber pattern="#0" locale="cs"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel for="ks" value="KS:"/>
+                                        <p:inputText id="ks" value="#{invoiceWizardBean.invoice.constantsymbol}" required="true" >
+                                            <f:convertNumber pattern="#0" locale="cs"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel for="ss" value="SS:"/>
+                                        <p:inputText id="ss" value="#{invoiceWizardBean.invoice.specificsymbol}" required="false" >
+                                            <f:convertNumber pattern="#0" locale="cs"/>
+                                        </p:inputText>
+
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2"  >
+
+                                        <p:outputLabel for="created" value="Datum vystavení:"/>
+                                        <p:calendar id="created" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.created}" showOn="button" required="true" label="Datum vystavení" />                  
 
 
-                                    <p:outputLabel value="Forma platby:" for="method" />
-                                    <p:outputLabel for="invoiceNumber" value="Číslo faktury:"/>
-                                    <p:outputLabel />
-                                    <p:autoComplete id="method"  value="#{invoiceWizardBean.method}" required="true" completeMethod="#{invoiceWizardBean.completeMethod}" dropdown="true" 
-                                                    var="method" itemLabel="#{method.title}" itemValue="#{method}" converter="methodWizardConverter" forceSelection="true"  >
-                                        <!--<p:ajax event="itemSelect" update="details"  resetValues="false"  />-->
-                                    </p:autoComplete>
-                                    <p:inputText id="invoiceNumber" value="#{invoiceWizardBean.invoice.invoicenumber}" required="true" label="Číslo faktury" disabled="true"/>        
+                                        <p:outputLabel for="duzp" value="DUZP:"/>
+                                        <p:calendar id="duzp" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.duzp}" required="true" showOn="button" label="DUZP"/>
+
+
+                                        <p:outputLabel for="due" value="Splatnost:"/>
+                                        <p:calendar id="due" pattern="dd.MM.yyyy" locale="cs" value="#{invoiceWizardBean.invoice.due}" required="true" showOn="button" label="Splatnost"/>                
+
+                                        <p:spacer></p:spacer>
+                                        <p:spacer></p:spacer>
+
+                                        <p:spacer></p:spacer>
+                                        <p:spacer></p:spacer>
+
+                                    </h:panelGrid>
 
                                 </h:panelGrid>
 
@@ -72,112 +103,86 @@
 
                             <p:panel id="customerPanel" header="Zákazník">
 
-                                <h:panelGrid columns="3" cellpadding="5" >
-                                    <p:selectOneButton value="#{invoiceWizardBean.customerOption}">
-                                        <f:selectItem itemLabel="Vytvořit" itemValue="create" />
-                                        <f:selectItem itemLabel="Hledat" itemValue="search" />
-                                        <p:ajax update="customerGrid" listener="#{invoiceWizardBean.switchCustomerOption}" />
-                                    </p:selectOneButton>
-                                    <p:autoComplete id="customer" value="#{invoiceWizardBean.customer}" completeMethod="#{invoiceWizardBean.completeContact}"
-                                                    var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
-                                                    forceSelection="true" dropdown="true" rendered="#{invoiceWizardBean.renderSearchCustomer}"
-                                                    required="true">
-                                        <p:ajax event="itemSelect" update="customerGrid" resetValues="true"/>
-                                    </p:autoComplete>
+                                <p:selectOneButton value="#{invoiceWizardBean.customerOption}" style="float: right;">
+                                    <f:selectItem itemLabel="Vytvořit" itemValue="create" />
+                                    <f:selectItem itemLabel="Hledat" itemValue="search" />
+                                    <p:ajax update="customerPanel" listener="#{invoiceWizardBean.switchCustomerOption}" />
+                                </p:selectOneButton>
 
-                                </h:panelGrid>
+                                <p:selectBooleanCheckbox value="#{invoiceWizardBean.isSingleAddress}" itemLabel="Adresa zákazníka je současně adresou doručovací" style="padding: 5px;">
+                                    <p:ajax update="addressPanel" listener="#{invoiceWizardBean.updateAddress}" />
+                                </p:selectBooleanCheckbox>
 
                                 <p:messages />
 
-                                <h:panelGrid id="customerGrid" columns="4" cellpadding="5" rendered="#{invoiceWizardBean.renderSearchCustomer}" columnClasses="label,content,label,content" rowClasses="row">
+                                <h:panelGrid id="customerGrid" columns="4" rendered="#{invoiceWizardBean.renderSearchCustomer}">
 
-                                    <p:outputLabel value="Jméno:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.name}" />
-                                    <p:outputLabel value="Příjmení:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.lastname}" />
+                                    <p:outputLabel for="customer" value="Jméno:"/>
+                                    <p:autoComplete id="customer" value="#{invoiceWizardBean.customer}" completeMethod="#{invoiceWizardBean.completeContact}"
+                                                    var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
+                                                    forceSelection="true" dropdown="false" required="true" >
+                                        <p:ajax event="itemSelect" update="customerPanel" resetValues="true" listener="#{invoiceWizardBean.updateAddress}"/>
+                                    </p:autoComplete>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer> 
 
+                                    <p:outputLabel value="Adresa:"/>                   
+                                    <h:outputText value="#{invoiceWizardBean.customer.street}" />
                                     <p:outputLabel value="Firma:"/>                   
                                     <h:outputText value="#{invoiceWizardBean.customer.company}" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
 
+                                    <p:spacer></p:spacer>
+                                    <h:outputText  value="#{invoiceWizardBean.customer.city}" />
                                     <p:outputLabel value="IČO:"/>                   
                                     <h:outputText value="#{invoiceWizardBean.customer.ico}" />
+
+                                    <p:spacer></p:spacer>
+                                    <h:outputText  value="#{invoiceWizardBean.customer.pcode}" />
                                     <p:outputLabel value="DIČ:"/>                   
                                     <h:outputText value="#{invoiceWizardBean.customer.dic}" />
 
-                                    <p:outputLabel value="Bankovní účet:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.bankaccount}" />
+                                    <p:spacer></p:spacer>
+                                    <h:outputText  value="#{invoiceWizardBean.customer.state}" />
                                     <p:spacer></p:spacer>
                                     <p:spacer></p:spacer>
-
-                                    <p:outputLabel value="Ulice:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.street}" />
-                                    <p:outputLabel value="Město:"/>                   
-                                    <h:outputText  value="#{invoiceWizardBean.customer.city}" />
-
-                                    <p:outputLabel value="PSČ:"/>                   
-                                    <h:outputText  value="#{invoiceWizardBean.customer.pcode}" />
-                                    <p:outputLabel value="Stát:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.state}" />
-
-                                    <p:outputLabel value="E-mail:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.email}" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
-
-                                    <p:outputLabel value="Telefon:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.phone}" />
-                                    <p:outputLabel value="Fax:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.customer.fax}" />
 
                                 </h:panelGrid>
 
-                                <h:panelGrid id="createCustomerGrid" columns="4" cellpadding="5" rendered="#{invoiceWizardBean.renderCreateCustomer}" columnClasses="label,content,label,content">
+                                <h:panelGrid id="createCustomerGrid" columns="4"  rendered="#{invoiceWizardBean.renderCreateCustomer}">
 
                                     <p:outputLabel for="customerName" value="Jméno:"/>                   
                                     <p:inputText id="customerName" value="#{invoiceWizardBean.customer.name}" required="true" label="Jméno" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
                                     <p:outputLabel for="customerLastName" value="Příjmení:"/>                   
                                     <p:inputText id="customerLastName" value="#{invoiceWizardBean.customer.lastname}" required="true" label="Příjmení"/>
-
                                     <p:outputLabel for="customerCompany" value="Firma:"/>                   
                                     <p:inputText id="customerCompany" value="#{invoiceWizardBean.customer.company}" required="false" label="Firma" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
 
+                                    <p:outputLabel for="customerStreet" value="Ulice:"/>                   
+                                    <p:inputText id="customerStreet" value="#{invoiceWizardBean.customer.street}" required="true" label="Ulice" />
                                     <p:outputLabel for="customerIco" value="IČO:"/>                   
                                     <p:inputText id="customerIco" value="#{invoiceWizardBean.customer.ico}" required="false" label="IČO" />
+
+                                    <p:outputLabel for="customerCity" value="Město:"/>                   
+                                    <p:inputText  id="customerCity" value="#{invoiceWizardBean.customer.city}" required="true" label="Město" />
                                     <p:outputLabel for="customerDic" value="DIČ:"/>                   
                                     <p:inputText id="customerDic" value="#{invoiceWizardBean.customer.dic}" required="false" label="DIČ" />
 
-                                    <p:outputLabel for="customerBankAccount" value="Bankovní účet:"/>                   
-                                    <p:inputText id="customerBankAccount" value="#{invoiceWizardBean.customer.bankaccount}" required="false" label="Bankovní účet" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
-
-                                    <p:outputLabel for="customerStreet" value="Ulice:"/>                   
-                                    <p:inputText id="customerStreet" value="#{invoiceWizardBean.customer.street}" required="false" label="Ulice" />
-                                    <p:outputLabel for="customerCity" value="Město:"/>                   
-                                    <p:inputText  id="customerCity" value="#{invoiceWizardBean.customer.city}" required="false" label="Město" />
-
                                     <p:outputLabel for="customerPcode" value="PSČ:"/>                   
-                                    <p:inputText id="customerPcode" value="#{invoiceWizardBean.customer.pcode}" required="false" label="PSČ" />
+                                    <p:inputText id="customerPcode" value="#{invoiceWizardBean.customer.pcode}" required="true" label="PSČ" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
                                     <p:outputLabel for="customerState" value="Stát:"/>                   
-                                    <p:inputText id="customerState" value="#{invoiceWizardBean.customer.state}" required="false" label="Stát" />
-
-                                    <p:outputLabel for="customerEmail" value="E-mail:"/>                   
-                                    <p:inputText id="customerEmail" value="#{invoiceWizardBean.customer.email}" required="false" label="E-mail" />
+                                    <p:inputText id="customerState" value="#{invoiceWizardBean.customer.state}" required="true" label="Stát" />
                                     <p:spacer></p:spacer>
                                     <p:spacer></p:spacer>
 
-                                    <p:outputLabel for="customerPhone" value="Telefon:"/>                   
-                                    <p:inputText id="customerPhone" value="#{invoiceWizardBean.customer.phone}" required="false" label="Telefon" />
-                                    <p:outputLabel for="customerFax" value="Fax:"/>                   
-                                    <p:inputText id="customerFax" value="#{invoiceWizardBean.customer.fax}" required="false" label="Fax" />
 
                                 </h:panelGrid>
 
-                                <p:selectBooleanCheckbox value="#{invoiceWizardBean.skip}" itemLabel="Doručovací adresa je stejná:" style="padding: 5px;"/>
 
                             </p:panel>
                         </p:tab>
@@ -186,107 +191,82 @@
 
                             <p:panel id="addressPanel" header="Doručovací adresa">
 
-                                <h:panelGrid columns="2" cellpadding="5" >
-                                    <p:selectOneButton value="#{invoiceWizardBean.addressOption}">
-                                        <f:selectItem itemLabel="Vytvořit" itemValue="create" />
-                                        <f:selectItem itemLabel="Hledat" itemValue="search" />
-                                        <p:ajax update="addressGrid" listener="#{invoiceWizardBean.switchAddressOption}" />
-                                    </p:selectOneButton>
-                                    <p:autoComplete id="address" value="#{invoiceWizardBean.address}" completeMethod="#{invoiceWizardBean.completeContact}"
-                                                    var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
-                                                    forceSelection="true" dropdown="true" rendered="#{invoiceWizardBean.renderSearchAddress}"
-                                                    required="true">
-                                        <p:ajax event="itemSelect" update="addressGrid" resetValues="true"/>
-                                    </p:autoComplete>
-                                </h:panelGrid>
+                                <p:selectOneButton value="#{invoiceWizardBean.addressOption}" style="float: right;">
+                                    <f:selectItem itemLabel="Vytvořit" itemValue="create" />
+                                    <f:selectItem itemLabel="Hledat" itemValue="search" />
+                                    <p:ajax update="addressPanel" listener="#{invoiceWizardBean.switchAddressOption}" />
+                                </p:selectOneButton>
+
+                                <p:selectBooleanCheckbox value="#{invoiceWizardBean.isSingleAddress}" itemLabel="Adresa zákazníka je současně adresou doručovací" style="padding: 5px;">
+                                    <p:ajax update="addressPanel" listener="#{invoiceWizardBean.updateAddress}" />
+                                </p:selectBooleanCheckbox>
 
                                 <p:messages />
 
-                                <h:panelGrid id="addressGrid" columns="4" cellpadding="5" rendered="#{invoiceWizardBean.renderSearchAddress}" columnClasses="label,content,label,content" rowClasses="row">
+                                <h:panelGrid id="addressGrid" columns="4"  rendered="#{invoiceWizardBean.renderSearchAddress}">
 
-                                    <p:outputLabel value="Jméno:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.name}" />
-                                    <p:outputLabel value="Příjmení:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.lastname}" />
+                                    <p:outputLabel for="address" value="Jméno:"/>
+                                    <p:autoComplete id="address" value="#{invoiceWizardBean.address}" completeMethod="#{invoiceWizardBean.completeContact}"
+                                                    var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
+                                                    forceSelection="true" dropdown="false" required="true">
+                                        <p:ajax event="itemSelect" update="addressPanel" resetValues="true"/>
+                                    </p:autoComplete>
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer> 
 
+                                    <p:outputLabel value="Adresa:"/>                   
+                                    <h:outputText value="#{invoiceWizardBean.address.street}" />
                                     <p:outputLabel value="Firma:"/>                   
                                     <h:outputText value="#{invoiceWizardBean.address.company}" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
 
-                                    <p:outputLabel value="IČO:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.ico}" />
-                                    <p:outputLabel value="DIČ:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.dic}" />
-
-                                    <p:outputLabel value="Bankovní účet:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.bankaccount}" />
                                     <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
-
-                                    <p:outputLabel value="Ulice:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.street}" />
-                                    <p:outputLabel value="Město:"/>                   
                                     <h:outputText  value="#{invoiceWizardBean.address.city}" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer> 
 
-                                    <p:outputLabel value="PSČ:"/>                   
+                                    <p:spacer></p:spacer>
                                     <h:outputText  value="#{invoiceWizardBean.address.pcode}" />
-                                    <p:outputLabel value="Stát:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.state}" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer> 
 
-                                    <p:outputLabel value="E-mail:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.email}" />
+                                    <p:spacer></p:spacer>
+                                    <h:outputText  value="#{invoiceWizardBean.address.state}" />
                                     <p:spacer></p:spacer>
                                     <p:spacer></p:spacer>
-
-                                    <p:outputLabel value="Telefon:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.phone}" />
-                                    <p:outputLabel value="Fax:"/>                   
-                                    <h:outputText value="#{invoiceWizardBean.address.fax}" />
 
                                 </h:panelGrid>
 
-                                <h:panelGrid id="createAddressGrid" columns="4" cellpadding="5" rendered="#{invoiceWizardBean.renderCreateAddress}" columnClasses="label,content,label,content">
+                                <h:panelGrid id="createAddressGrid" columns="4"  rendered="#{invoiceWizardBean.renderCreateAddress}" >
 
                                     <p:outputLabel for="addressName" value="Jméno:"/>                   
                                     <p:inputText id="addressName" value="#{invoiceWizardBean.address.name}" required="true" label="Jméno" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
                                     <p:outputLabel for="addressLastName" value="Příjmení:"/>                   
                                     <p:inputText id="addressLastName" value="#{invoiceWizardBean.address.lastname}" required="true" label="Příjmení"/>
-
                                     <p:outputLabel for="addressCompany" value="Firma:"/>                   
                                     <p:inputText id="addressCompany" value="#{invoiceWizardBean.address.company}" required="false" label="Firma" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
-
-                                    <p:outputLabel for="addressIco" value="IČO:"/>                   
-                                    <p:inputText id="addressIco" value="#{invoiceWizardBean.address.ico}" required="false" label="IČO" />
-                                    <p:outputLabel for="addressDic" value="DIČ:"/>                   
-                                    <p:inputText id="addressDic" value="#{invoiceWizardBean.address.dic}" required="false" label="DIČ" />
-
-                                    <p:outputLabel for="addressBankAccount" value="Bankovní účet:"/>                   
-                                    <p:inputText id="addressBankAccount" value="#{invoiceWizardBean.address.bankaccount}" required="false" label="Bankovní účet" />
-                                    <p:spacer></p:spacer>
-                                    <p:spacer></p:spacer>
 
                                     <p:outputLabel for="addressStreet" value="Ulice:"/>                   
-                                    <p:inputText id="addressStreet" value="#{invoiceWizardBean.address.street}" required="false" label="Ulice" />
+                                    <p:inputText id="addressStreet" value="#{invoiceWizardBean.address.street}" required="true" label="Ulice" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer> 
+
                                     <p:outputLabel for="addressCity" value="Město:"/>                   
-                                    <p:inputText  id="addressCity" value="#{invoiceWizardBean.address.city}" required="false" label="Město" />
+                                    <p:inputText  id="addressCity" value="#{invoiceWizardBean.address.city}" required="true" label="Město" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer> 
 
                                     <p:outputLabel for="addressPcode" value="PSČ:"/>                   
-                                    <p:inputText id="addressPcode" value="#{invoiceWizardBean.address.pcode}" required="false" label="PSČ" />
+                                    <p:inputText id="addressPcode" value="#{invoiceWizardBean.address.pcode}" required="true" label="PSČ" />
+                                    <p:spacer></p:spacer>
+                                    <p:spacer></p:spacer>
+
                                     <p:outputLabel for="addressState" value="Stát:"/>                   
-                                    <p:inputText id="addressState" value="#{invoiceWizardBean.address.state}" required="false" label="Stát" />
-
-                                    <p:outputLabel for="addressEmail" value="E-mail:"/>                   
-                                    <p:inputText id="addressEmail" value="#{invoiceWizardBean.address.email}" required="false" label="E-mail" />
+                                    <p:inputText id="addressState" value="#{invoiceWizardBean.address.state}" required="true" label="Stát" />
                                     <p:spacer></p:spacer>
                                     <p:spacer></p:spacer>
-
-                                    <p:outputLabel for="addressPhone" value="Telefon:"/>                   
-                                    <p:inputText id="addressPhone" value="#{invoiceWizardBean.address.phone}" required="false" label="Telefon" />
-                                    <p:outputLabel for="addressFax" value="Fax:"/>                   
-                                    <p:inputText id="addressFax" value="#{invoiceWizardBean.address.fax}" required="false" label="Fax" />
 
                                 </h:panelGrid>
                             </p:panel>
@@ -294,7 +274,7 @@
 
                         <p:tab id="itemsTab" title="Položky">
                             <p:panel id="itemPanel" header="Položky">
-                                
+
                                 <p:selectOneButton value="#{invoiceWizardBean.itemOption}" style="float:right">
                                     <f:selectItem itemLabel="Vytvořit" itemValue="create" />
                                     <f:selectItem itemLabel="Hledat" itemValue="search" />
@@ -302,8 +282,8 @@
                                 </p:selectOneButton>
 
                                 <p:messages />
-                                
-                                <h:panelGrid id="searchItemGrid" columns="5" cellpadding="5" rendered="#{invoiceWizardBean.renderSearchItem}">
+
+                                <h:panelGrid id="searchItemGrid" columns="5" rendered="#{invoiceWizardBean.renderSearchItem}" style="width: 1000px;">
 
                                     <p:outputLabel for="searchItemCode" value="Kód:"/>
                                     <p:autoComplete id="searchItemCode" value="#{invoiceWizardBean.item}" completeMethod="#{invoiceWizardBean.completeItemCode}"
@@ -358,7 +338,7 @@
 
                                 </h:panelGrid>
 
-                                <h:panelGrid id="createItemGrid" columns="5" cellpadding="5" rendered="#{invoiceWizardBean.renderCreateItem}">
+                                <h:panelGrid id="createItemGrid" columns="5"  rendered="#{invoiceWizardBean.renderCreateItem}" style="width: 1000px;">
 
                                     <p:outputLabel for="createItemCode" value="Kód:"/>
                                     <p:inputText id="createItemCode" value="#{invoiceWizardBean.item.code}" required="true" label="Kód">
@@ -377,7 +357,7 @@
                                         <p:ajax update="createItemGrid" resetValues="true"  />                           
                                     </p:spinner>
                                     <p:commandButton process="createItemGrid" id="createItemAddBtn" value="Přidat" 
-                                                     update="itemPanel" action="#{invoiceWizardBean.addItem}" resetValues="true">
+                                                     update="itemPanel" action="#{invoiceWizardBean.addNewItem}" resetValues="true">
                                         <!--<p:ajax update="itemPanel" resetValues="true"  />-->
                                     </p:commandButton>
 
@@ -460,7 +440,7 @@
                                 </p:dataTable>
 
 
-                                <h:panelGrid id="sumItemGrid" columns="2" cellpadding="5" style="font-weight: bolder;">
+                                <h:panelGrid id="sumItemGrid" columns="2"  style="font-weight: bolder;">
                                     <p:outputLabel value="Celkem (bez DPH):"/>
                                     <h:outputText value="#{invoiceWizardBean.sumNetPrice}" >
                                         <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
@@ -480,7 +460,206 @@
                         <p:tab id="confirmTab" title="Souhrn">
                             <p:panel header="Sourhn">
 
-                                Void
+                                <h1 style="width: 990px; text-align: right;"><h:outputText value="Faktura daňový doklad č. #{invoiceWizardBean.invoice.invoicenumber}" /></h1>
+
+                                <h:panelGrid columns="2" style="width: 990px; border-top: 1px solid graytext;">
+
+                                    <h:panelGrid columns="2" style="width: 495px; border-right: 1px solid graytext;" columnClasses="label,value">
+
+                                        <h:outputText value="Dodavatel:" class="h2"/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Adresa:"/>
+                                        <h:outputText value="#{invoiceWizardBean.user.wholename}"/>
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.user.company}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.user.street}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.user.pscAndCityInOneLine}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.user.state}" />
+
+                                        <h:outputText value="IČO:" />
+                                        <h:outputText value="#{invoiceWizardBean.user.ico}" />
+
+                                        <h:outputText value="DIČ:" />
+                                        <h:outputText value="#{invoiceWizardBean.user.dic}" />
+
+                                        <h:outputText value="Doložka:" />
+                                        <h:outputText value="NOT IMPLEMENTED YET" />
+
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Tel:" />
+                                        <h:outputText value="#{invoiceWizardBean.user.phone}" />
+
+                                        <h:outputText value="Email:" />
+                                        <h:outputText value="#{invoiceWizardBean.user.email}" />
+
+                                        <h:outputText value="WWW:" />
+                                        <h:outputText value="#{invoiceWizardBean.user.www}" />
+
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" style="width: 495px;" columnClasses="label,value">
+                                        <h:outputText value="Odběratel:" class="h2"/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Fakturační adresa:" />
+                                        <h:outputText value="#{invoiceWizardBean.customer.wholename}"/>
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.customer.company}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.customer.street}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.customer.pscAndCityInOneLine}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.customer.state}" />
+
+                                        <h:outputText value="IČO:" />
+                                        <h:outputText value="#{invoiceWizardBean.customer.ico}" />
+
+                                        <h:outputText value="DIČ:" />
+                                        <h:outputText value="#{invoiceWizardBean.customer.dic}" />
+
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <h:outputText value="Doručovací adresa:" />
+                                        <h:outputText value="#{invoiceWizardBean.address.wholename}"/>
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.address.company}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.address.street}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.address.pscAndCityInOneLine}" />
+
+                                        <p:spacer/>
+                                        <h:outputText value="#{invoiceWizardBean.address.state}" />
+
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="2" style="border-top: 1px solid graytext;">
+
+                                    <h:panelGrid columns="2" style="width: 495px;" columnClasses="label,value">
+
+                                        <h:outputText value="Platební metoda:" />
+                                        <h:outputText value="#{invoiceWizardBean.method.title}" />
+
+                                        <h:outputText value="Bankovní účet:" />
+                                        <h:outputText value="#{invoiceWizardBean.user.bankaccount}" />
+
+                                        <h:outputText value="VS:" />
+                                        <h:outputText value="#{invoiceWizardBean.invoice.variablesymbol}" />
+
+                                        <h:outputText value="KS:" />
+                                        <h:outputText value="#{invoiceWizardBean.invoice.constantsymbol}" />
+
+                                        <h:outputText value="SS:" />
+                                        <h:outputText value="#{invoiceWizardBean.invoice.specificsymbol}" />
+
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" style="width: 495px;" columnClasses="label,value">
+
+                                        <h:outputText value="Datum vystavení:" />
+                                        <h:outputText value="#{invoiceWizardBean.convertDate(invoiceWizardBean.invoice.created)}" />
+
+                                        <h:outputText value="DUZP:" />
+                                        <h:outputText value="#{invoiceWizardBean.convertDate(invoiceWizardBean.invoice.duzp)}" />
+
+                                        <h:outputText value="Datum splatnosti:" />
+                                        <h:outputText value="#{invoiceWizardBean.convertDate(invoiceWizardBean.invoice.due)}" />
+
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                        <p:spacer/>
+                                        <p:spacer/>
+
+                                    </h:panelGrid>
+
+                                </h:panelGrid>
+
+                                <p:dataTable value="#{invoiceWizardBean.addedItems}" var="item" id="confitmItemsTable" >
+
+                                    <p:column headerText="Kód" width="90">
+                                        <h:outputText value="#{item.code}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Položka">
+                                        <h:outputText value="#{item.title}" />
+                                    </p:column>
+
+                                    <p:column headerText="DPH" width="45" style="text-align: right;" >
+                                        <h:outputText value="#{item.taxRate} %" />
+                                    </p:column>
+
+                                    <p:column headerText="Jedn.&nbsp;cena (bez&nbsp;DPH)" style="text-align: right;" width="115">
+                                        <h:outputText value="#{item.netPrice}" >
+                                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Jedn.&nbsp;cena (s&nbsp;DPH)" style="text-align: right;" width="115">
+                                        <h:outputText value="#{item.fullPrice}" >
+                                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Mn." width="45" style="text-align: right;">
+                                        <h:outputText value="#{item.invoiceHasItem.count} ks" />
+                                    </p:column>
+
+                                    <p:column headerText="Celkem (s&nbsp;DPH)" style="text-align: right;" width="135">
+                                        <h:outputText value="#{item.fullPrice * item.invoiceHasItem.count}" >
+                                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                                <h:panelGrid id="confirmSum" columns="2"  style="text-align: right; width: 340px; margin: 10px 0 10px 650px;">
+                                    <h:outputText value="Celkem bez DPH:"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumNetPrice}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <h:outputText value="Celkem DPH:"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumTax}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <h:outputText value="Celkem:" class="h2"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumFullPrice}" class="h2" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                </h:panelGrid>
+
+                                <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
+                                    <p:menuitem>
+                                        <p:commandButton ajax="false" actionListener="#{invoiceWizardBean.printInvoice}"  title="Vytisknout" icon="ui-icon-print" />
+                                    </p:menuitem>
+                                    <f:facet name="options">
+                                        <p:commandButton id="save_button" action="#{invoiceWizardBean.saveInvoice}" value="Uložit"/>
+                                    </f:facet>
+                                </p:menubar>
 
                             </p:panel>
                         </p:tab>
