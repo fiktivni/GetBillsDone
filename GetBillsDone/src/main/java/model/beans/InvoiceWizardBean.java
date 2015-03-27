@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.InvoiceHasItem;
@@ -38,6 +39,8 @@ import org.primefaces.event.FlowEvent;
 @ManagedBean(name = "invoiceWizardBean")
 public class InvoiceWizardBean implements Serializable {
 
+    @Inject DashboardBean dashboard;
+    
     private Invoice invoice = new Invoice();
     private Person customer = new Person();
     private Person address = new Person();
@@ -75,9 +78,12 @@ public class InvoiceWizardBean implements Serializable {
         customer = new Person();
         address = new Person();
         item = new Item();
-        contacts = Queries.getPersonsAtAccountId("" + userId);
-        methods = Queries.getMethods();
-        invoices = Queries.getInvoices(userId);
+        //contacts = Queries.getPersonsAtAccountId("" + userId);
+        contacts = dashboard.getPersons();
+        //methods = Queries.getMethods();
+        methods = dashboard.getMethods();
+        //invoices = Queries.getInvoices(userId);
+        invoices = dashboard.getInvoices();
         allItems = Queries.getItemsAtAccountId("" + userId);
         addedItems = new ArrayList<>();
         user = Queries.getUser("" + userId);
@@ -109,7 +115,7 @@ public class InvoiceWizardBean implements Serializable {
         invoice.setInvoicenumber(cal.get(Calendar.YEAR) * 100000 + invoices.size() + 1);
         invoice.setConstantsymbol(308);
         invoice.setVariablesymbol(invoice.getInvoicenumber());
-        
+
         method = methods.get(1);
 
         address.setAccountIdaccount(userId);
@@ -341,13 +347,13 @@ public class InvoiceWizardBean implements Serializable {
             item.setAccountIdaccount(userId);
         }
     }
-    
-    public void addNewItem(){
+
+    public void addNewItem() {
         saveItem();
         addItem();
     }
-    
-    public void saveItem(){
+
+    public void saveItem() {
         if (item.getId() == null) {
             Queries.createItem(item);
         } else {
@@ -467,27 +473,27 @@ public class InvoiceWizardBean implements Serializable {
 
         RequestContext.getCurrentInstance().update("form:itemPanel");
     }
-    
-    public void updateItemPanel(){
+
+    public void updateItemPanel() {
         RequestContext.getCurrentInstance().update("form:itemPanel");
     }
-    
-    public void updateAddress(){
-        if(isSingleAddress){
+
+    public void updateAddress() {
+        if (isSingleAddress) {
             address = customer;
-            
+
         } else {
             address = new Person();
             address.setAccountIdaccount(userId);
         }
         RequestContext.getCurrentInstance().update("form:addressPanel");
     }
-    
-    public String convertDate(Date date){
+
+    public String convertDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         return formatter.format(date);
     }
-    
+
     public String saveInvoice() {
 
         Double total = getSumFullPrice();
@@ -506,37 +512,81 @@ public class InvoiceWizardBean implements Serializable {
          Save recipient, customer and fill invoice with their ID and return her ID to variable
          */
         customer.setIsowner(false);
-        if(customer.getId() == null){
+        if (customer.getId() == null) {
             customer.setId(Queries.createPerson(customer));
         }
         Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), customer.getId(), 2));
 
-        if(isSingleAddress){
+        if (isSingleAddress) {
             Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), customer.getId(), 3));
         } else {
-            if(address.getId() == null){
+            if (address.getId() == null) {
                 address.setId(Queries.createPerson(address));
             }
             Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), address.getId(), 3));
         }
-        
-        for(Item i : addedItems){           
-            Queries.createItem(i);
+
+        for (Item i : addedItems) {
             i.getInvoiceHasItem().setInvoiceIdinvoice(invoice.getId());
             i.getInvoiceHasItem().setItemIditem(i.getId());
-            Queries.createInvoiceHasItem(i.getInvoiceHasItem());            
+            Queries.createInvoiceHasItem(i.getInvoiceHasItem());
         }
-        
+
+        invoices.add(invoice);
+        dashboard.setInvoices(invoices);
         return "invoices";
     }
-    
+
     public void printInvoice(ActionEvent actionEvent) throws IOException, JRException {
-        
-        if(invoice.getId() == null){
+
+        if (invoice.getId() == null) {
             saveInvoice();
         }
-         
+
         controller.Printer.printInvoice(actionEvent, invoice, addedItems, user, customer, address);
-       
+    }
+
+    /**
+     * Loads coplete invoice from database and displays it in a preview mode.
+     *
+     * @param invoice
+     * @return
+     */
+    public String previewInvoice(Invoice invoice) {
+        init();
+        this.invoice = invoice;
+
+        List<InvoiceHasItem> invoiceHasItems = Queries.getInvoiceHasItemList(invoice.getId());
+        for (InvoiceHasItem invoiceHasItem : invoiceHasItems) {
+            for (Item aitem : allItems) {
+                if (invoiceHasItem.getItemIditem() == aitem.getId()) {
+                    aitem.setInvoiceHasItem(invoiceHasItem);
+                    addedItems.add(aitem);
+                }
+            }
+        }
+
+        getSumNetPrice();
+        getSumFullPrice();
+        getSumTax();
+
+        List<InvoiceHasPerson> invoiceHasPersons = Queries.getInvoiceHasPersonList(invoice.getId());
+        for (InvoiceHasPerson invoiceHasPerson : invoiceHasPersons) {
+            for (Person contact : contacts) {
+                if (invoiceHasPerson.getPersonIdperson() == contact.getId()) {
+                    switch (invoiceHasPerson.getRelation()) {
+                        case 1: // We already know the USER
+                            break;
+                        case 2: customer = contact;
+                            break;
+                        case 3: address = contact;
+                            break;
+                    }
+                }
+            }
+
+        }
+
+        return "invoicePreview";
     }
 }

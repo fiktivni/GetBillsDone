@@ -1,0 +1,289 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Faktura #{invoiceWizardBean.invoice.invoicenumber}</title>
+        <link rel="icon" 
+              type="image/png" 
+              href="images/fav.png" />
+        <style type="text/css">
+            .h2{
+                font-weight: bolder;
+                font-size: larger;
+            }
+            .label{
+                width: 175px;
+            }
+            .value{
+                width: 340px;
+            }
+            .sumlabel{
+                width: 175px;
+            }
+            .sumvalue{
+                width: 175px;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+
+        <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
+
+            <ui:include src="/compositions/navigation.xhtml" />
+
+            <h:form id="form">
+
+                <p:panel id="invoice" header="Faktura #{invoiceWizardBean.invoice.invoicenumber}">
+
+                    <p:growl id="growl" sticky="true" showDetail="true"/>
+
+                    <h1 style="width: 1030px; text-align: right;"><h:outputText value="Faktura daňový doklad č. #{invoiceWizardBean.invoice.invoicenumber}" /></h1>
+
+                    <h:panelGrid columns="2" style="width: 1030px; border-top: 1px solid graytext;">
+
+                        <h:panelGrid columns="2" style="width: 515px; border-right: 1px solid graytext;" columnClasses="label,value">
+
+                            <h:outputText value="Dodavatel:" class="h2"/>
+                            <p:spacer/>
+
+                            <h:outputText value="Adresa:"/>
+                            <h:outputText value="#{invoiceWizardBean.user.wholename}"/>
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.user.company}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.user.street}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.user.pscAndCityInOneLine}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.user.state}" />
+
+                            <h:outputText value="IČO:" />
+                            <h:outputText value="#{invoiceWizardBean.user.ico}" />
+
+                            <h:outputText value="DIČ:" />
+                            <h:outputText value="#{invoiceWizardBean.user.dic}" />
+
+                            <h:outputText value="Doložka:" />
+                            <h:outputText value="NOT IMPLEMENTED YET" />
+
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <h:outputText value="Tel:" />
+                            <h:outputText value="#{invoiceWizardBean.user.phone}" />
+
+                            <h:outputText value="Email:" />
+                            <h:outputText value="#{invoiceWizardBean.user.email}" />
+
+                            <h:outputText value="WWW:" />
+                            <h:outputText value="#{invoiceWizardBean.user.www}" />
+
+                            <p:spacer/>
+                            <p:spacer/>
+
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" style="width: 515px;" columnClasses="label,value">
+                            <h:outputText value="Odběratel:" class="h2"/>
+                            <p:spacer/>
+
+                            <h:outputText value="Fakturační adresa:" />
+                            <h:outputText value="#{invoiceWizardBean.customer.wholename}"/>
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.customer.company}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.customer.street}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.customer.pscAndCityInOneLine}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.customer.state}" />
+
+                            <h:outputText value="IČO:" />
+                            <h:outputText value="#{invoiceWizardBean.customer.ico}" />
+
+                            <h:outputText value="DIČ:" />
+                            <h:outputText value="#{invoiceWizardBean.customer.dic}" />
+
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <h:outputText value="Doručovací adresa:" />
+                            <h:outputText value="#{invoiceWizardBean.address.wholename}"/>
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.address.company}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.address.street}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.address.pscAndCityInOneLine}" />
+
+                            <p:spacer/>
+                            <h:outputText value="#{invoiceWizardBean.address.state}" />
+
+                        </h:panelGrid>
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" style="border-top: 1px solid graytext;">
+
+                        <h:panelGrid columns="2" style="width: 515px;" columnClasses="label,value">
+
+                            <h:outputText value="Platební metoda:" />
+                            <h:outputText value="#{invoiceWizardBean.method.title}" />
+
+                            <h:outputText value="Bankovní účet:" />
+                            <h:outputText value="#{invoiceWizardBean.user.bankaccount}" />
+
+                            <h:outputText value="VS:" />
+                            <h:outputText value="#{invoiceWizardBean.invoice.variablesymbol}" />
+
+                            <h:outputText value="KS:" />
+                            <h:outputText value="#{invoiceWizardBean.invoice.constantsymbol}" />
+
+                            <h:outputText value="SS:" />
+                            <h:outputText value="#{invoiceWizardBean.invoice.specificsymbol}" />
+
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" style="width: 515px;" columnClasses="label,value">
+
+                            <h:outputText value="Datum vystavení:" />
+                            <h:outputText value="#{invoiceWizardBean.convertDate(invoiceWizardBean.invoice.created)}" />
+
+                            <h:outputText value="DUZP:" />
+                            <h:outputText value="#{invoiceWizardBean.convertDate(invoiceWizardBean.invoice.duzp)}" />
+
+                            <h:outputText value="Datum splatnosti:" />
+                            <h:outputText value="#{invoiceWizardBean.convertDate(invoiceWizardBean.invoice.due)}" />
+
+                            <p:spacer/>
+                            <p:spacer/>
+
+                            <p:spacer/>
+                            <p:spacer/>
+
+                        </h:panelGrid>
+
+                    </h:panelGrid>
+
+                    <p:dataTable value="#{invoiceWizardBean.addedItems}" var="item" id="confitmItemsTable">
+
+                        <p:column headerText="Kód" width="90">
+                            <h:outputText value="#{item.code}"/>
+                        </p:column>
+
+                        <p:column headerText="Položka">
+                            <h:outputText value="#{item.title}" />
+                        </p:column>
+
+                        <p:column headerText="DPH" width="45" style="text-align: right;" >
+                            <h:outputText value="#{item.taxRate} %" />
+                        </p:column>
+
+                        <p:column headerText="Jedn.&nbsp;cena (bez&nbsp;DPH)" style="text-align: right;" width="115">
+                            <h:outputText value="#{item.netPrice}" >
+                                <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Jedn.&nbsp;cena (s&nbsp;DPH)" style="text-align: right;" width="115">
+                            <h:outputText value="#{item.fullPrice}" >
+                                <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Mn." width="45" style="text-align: right;">
+                            <h:outputText value="#{item.invoiceHasItem.count} ks" />
+                        </p:column>
+
+                        <p:column headerText="Celkem (s&nbsp;DPH)" style="text-align: right;" width="135">
+                            <h:outputText value="#{item.fullPrice * item.invoiceHasItem.count}" >
+                                <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                            </h:outputText>
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <h:panelGrid id="confirmSum" columns="2" 
+                                 style="text-align: right; width: 350px; margin: 10px 0 10px 690px;"
+                                 columnClasses="sumlabel,sumvalue">
+                        <h:outputText value="Celkem bez DPH:"/>
+                        <h:outputText value="#{invoiceWizardBean.sumNetPrice}" >
+                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                        </h:outputText>
+                        <h:outputText value="Celkem DPH:"/>
+                        <h:outputText value="#{invoiceWizardBean.sumTax}" >
+                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                        </h:outputText>
+                        <h:outputText value="Celkem:" class="h2"/>
+                        <h:outputText value="#{invoiceWizardBean.sumFullPrice}" class="h2" >
+                            <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                        </h:outputText>
+                    </h:panelGrid>
+
+                    <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
+                        <p:menuitem>
+                            
+                        </p:menuitem>
+                        <f:facet name="options">
+                            <p:commandButton ajax="false" actionListener="#{invoiceWizardBean.printInvoice}" value="Vytisknout" title="Vytisknout" icon="ui-icon-print" />
+                        </f:facet>
+                    </p:menubar>
+
+
+                </p:panel>
+
+            </h:form>
+
+            <ui:include src="/compositions/footer.xhtml" />
+
+        </div>
+
+    </h:body>
+
+    <script type="text/javascript">
+        PrimeFaces.locales ['cs'] = {
+            closeText: 'Zavřít',
+            prevText: 'Předchozí',
+            nextText: 'Další', monthNames: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', '�?íjen', 'Listopad', 'Prosinec'],
+            monthNamesShort: ['Led', 'Ún', 'Bře', 'Dub', 'Kvě', 'Čer', 'Čerec', 'Srp', 'Zář', '�?íj', 'Lis', 'Pro'],
+            dayNames: ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
+            dayNamesShort: ['Ne', 'Po', 'Út', 'Stř', 'Čt', 'Pá', 'So'],
+            dayNamesMin: ['Ne', 'Po', 'Út', 'Stř', 'Čt', 'Pá', 'So'],
+            weekHeader: 'Týden',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: '',
+            timeOnlyTitle: 'Pouze čas',
+            timeText: 'Čas',
+            hourText: 'Hodina',
+            minuteText: 'Minuta',
+            secondText: 'Vteřina',
+            currentText: 'Aktuální datum',
+            ampm: false,
+            month: 'Měsíc',
+            week: 'týden',
+            day: 'den',
+            allDayText: 'Celý den'
+        };
+    </script>
+
+
+</html>
+

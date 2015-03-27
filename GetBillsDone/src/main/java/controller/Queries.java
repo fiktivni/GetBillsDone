@@ -3,6 +3,7 @@
  */
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import model.Account;
@@ -138,9 +139,10 @@ public class Queries {
         }
         return result;
     }
-    
+
     /**
      * Returns user's details.
+     *
      * @param accountId
      * @return user
      */
@@ -160,50 +162,53 @@ public class Queries {
         }
         return user;
     }
-    
+
     /**
      * Returns account with the id.
+     *
      * @param id
-     * @return account 
+     * @return account
      */
-    public static Account getAccount(String id){
+    public static Account getAccount(String id) {
         Account account = new Account();
         Session s = sessionFactory.openSession();
-        
+
         try {
             Query q = s.createQuery("from Account where id = '" + id + "'");
             account = (Account) q.uniqueResult();
             return account;
-        }catch(HibernateException e){
+        } catch (HibernateException e) {
         } finally {
             s.close();
         }
         return account;
     }
-    
+
     /**
      * Returns method with the id.
+     *
      * @param id
-     * @return method 
+     * @return method
      */
-    public static Method getMethod(String id){
-        Method method= new Method();
+    public static Method getMethod(String id) {
+        Method method = new Method();
         Session s = sessionFactory.openSession();
-        
+
         try {
             Query q = s.createQuery("from Method where id = '" + id + "'");
             method = (Method) q.uniqueResult();
             return method;
-        }catch(HibernateException e){
+        } catch (HibernateException e) {
         } finally {
             s.close();
         }
         return method;
     }
-    
+
     /**
      * End of line for the person.
-     * @param person 
+     *
+     * @param person
      */
     public static void deletePerson(Person person) {
 
@@ -217,7 +222,7 @@ public class Queries {
             s.close();
         }
     }
-    
+
     public static void deleteItem(Item item) {
 
         Session s = sessionFactory.openSession();
@@ -231,10 +236,11 @@ public class Queries {
             s.close();
         }
     }
-    
+
     /**
      * End of line for the account.
-     * @param account 
+     *
+     * @param account
      */
     public static void deleteAccount(Account account) {
 
@@ -248,13 +254,14 @@ public class Queries {
             s.close();
         }
     }
-    
+
     /**
      * Updates the person.
-     * @param person 
+     *
+     * @param person
      */
     public static void updatePerson(Person person) {
-        
+
         Session s = sessionFactory.openSession();
         try {
             Transaction tx = s.beginTransaction();
@@ -264,12 +271,12 @@ public class Queries {
         } finally {
             s.close();
         }
-        
+
     }
-    
+
     public static void updateItem(Item item) {
         Session s = sessionFactory.openSession();
-        try{
+        try {
             Transaction tx = s.beginTransaction();
             s.update(item);
             tx.commit();
@@ -399,11 +406,11 @@ public class Queries {
         }
         return 0;
     }
-    
+
     public static void createInvoiceHasPerson(InvoiceHasPerson invoiceHasPerson) {
 
         Session session = null;
-        State result = null;   
+        State result = null;
 
         try {
             session = sessionFactory.openSession();
@@ -414,13 +421,13 @@ public class Queries {
             session.close();
         } catch (HibernateException e) {
         }
-       
+
     }
-    
+
     public static void createInvoiceHasItem(InvoiceHasItem invoiceHasItem) {
 
         Session session = null;
-        State result = null;   
+        State result = null;
 
         try {
             session = sessionFactory.openSession();
@@ -431,13 +438,65 @@ public class Queries {
             session.close();
         } catch (HibernateException e) {
         }
-       
+
+    }
+
+    /**
+     * Returns List of InvoiceHasItem related to the invoice
+     * specified via parameter invoiceId.
+     *
+     * @param invoiceId
+     * @return
+     */
+    public static List<InvoiceHasItem> getInvoiceHasItemList(int invoiceId) {
+
+        List<InvoiceHasItem> result = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+
+        try {
+            session.beginTransaction();
+            Query q = session.createQuery("from InvoiceHasItem where "
+                    + "invoice_idinvoice ='" + invoiceId + "' ");
+            return (List<InvoiceHasItem>) q.list();
+        } catch (Exception e) {
+
+        } finally {
+            session.close();
+        }
+        return result;
+
     }
     
+    /**
+     * Returns List of InvoiceHasPerson related to the invoice
+     * specified via parameter invoiceId.
+     *
+     * @param invoiceId
+     * @return
+     */
+    public static List<InvoiceHasPerson> getInvoiceHasPersonList(int invoiceId) {
+
+        List<InvoiceHasPerson> result = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+
+        try {
+            session.beginTransaction();
+            Query q = session.createQuery("from InvoiceHasPerson where "
+                    + "invoice_idinvoice ='" + invoiceId + "' ");
+            return (List<InvoiceHasPerson>) q.list();
+        } catch (Exception e) {
+
+        } finally {
+            session.close();
+        }
+        return result;
+
+    }
+
     public static void createItem(Item item) {
 
         Session session = null;
-        State result = null;   
+        State result = null;
 
         try {
             session = sessionFactory.openSession();
@@ -448,7 +507,7 @@ public class Queries {
             session.close();
         } catch (HibernateException e) {
         }
-       
+
     }
 
     public static int createInvoice(Invoice selectedInvoice) {

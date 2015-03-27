@@ -15,16 +15,20 @@ import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.Item;
+import model.Method;
 import model.Person;
 
 @SessionScoped
 @Named("dashboardBean")
 public class DashboardBean implements Serializable {
 
-    private static List<Invoice> invoices;
-    private static List<Person> persons;
-    private static List<Item> items;
+    private List<Invoice> invoices;
+    private List<Person> persons;
+    private List<Item> items;
+    private List<Method> methods;
 
+    private List<Invoice> filteredInvoices;
+    
     private String logedID = "0";
 
     @PostConstruct
@@ -36,6 +40,7 @@ public class DashboardBean implements Serializable {
         }
 
         invoices = Queries.getInvoices(Integer.parseInt(logedID));
+        methods = Queries.getMethods();
 
     }
 
@@ -45,11 +50,15 @@ public class DashboardBean implements Serializable {
     }
 
     public void setItems(List<Item> items) {
-        DashboardBean.items = items;
+        this.items = items;
     }
 
     public List<Invoice> getInvoices() {
         return invoices;
+    }
+
+    public void setInvoices(List<Invoice> invoices) {
+        this.invoices = invoices;
     }
 
     /**
@@ -79,6 +88,48 @@ public class DashboardBean implements Serializable {
      */
     public void setLogedID(String logedID) {
         this.logedID = logedID;
+    }
+
+    public List<Method> getMethods() {
+        return methods;
+    }
+
+    public void setMethods(List<Method> methods) {
+        this.methods = methods;
+    }
+
+    public List<Invoice> getFilteredInvoices() {
+        return filteredInvoices;
+    }
+
+    public void setFilteredInvoices(List<Invoice> filteredInvoices) {
+        this.filteredInvoices = filteredInvoices;
+    }
+    
+    public String getUsersWholeName(int personId){
+        for(Person user : persons){
+            if (user.getId() == personId)
+                return user.getWholename();
+        }
+        return null;
+    }
+    
+    public String getMethodTitle(int methodId){
+        for(Method method : methods){
+            if(method.getId() == methodId){
+                return method.getTitle();
+            }
+        }
+        return null;
+    }
+    
+    public Method getMethod(int methodId){
+        for(Method method : methods){
+            if(method.getId() == methodId){
+                return method;
+            }
+        }
+        return null;
     }
 
 }

@@ -19,45 +19,58 @@
 
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
                         <p:menuitem>
-                            <p:commandButton title="Nová faktura" action="invoice" icon="ui-icon-document" />
+                            <p:commandButton title="Nová (OLD)" label="Nová (OLD)" value="Nová (OLD)" action="invoice" icon="ui-icon-document" />
                         </p:menuitem>
                         <p:menuitem>
-                            <p:commandButton title="Nová faktura 2" actionListener="#{invoiceWizardBean.init}" action="invoiceWizard" icon="ui-icon-document" />
+                            <p:commandButton title="Nová (NEW)" label="Nová (NEW)" value="Nová (NEW)" actionListener="#{invoiceWizardBean.init}" action="invoiceWizard" icon="ui-icon-document" />
                         </p:menuitem>
-                        <p:menuitem>
-                            <p:commandButton title="Import" action="importInvoice" icon="ui-icon-arrowthickstop-1-n" />
-                        </p:menuitem>
+                        
                         <f:facet name="options">
-                            <p:inputText onkeypress="if (event.keyCode === 13) { document.getElementById('form:search_button').click(); return false; }" placeholder="Hledat" />
-                            <p:commandButton id="search_button" icon="ui-icon-search" action="#" process="@this" />
+                            
                         </f:facet>
                     </p:menubar>
 
-                    <p:dataTable paginator="true" var="invoice" value="#{dashboardBean.invoices}">
-                        <p:column headerText="Číslo fa.">
+                    <p:dataTable paginator="true" var="invoice" value="#{dashboardBean.invoices}"
+                                 filteredValue="#{dashboardBean.filteredInvoices}"
+                                 rows="10" rowsPerPageTemplate="10,20,30" widgetVar="invoicesTable">
+
+                        <p:column headerText="Číslo" width="110" style="text-align: left;"
+                                  sortBy="#{invoice.invoicenumber}" filterBy="#{invoice.invoicenumber}"
+                                  filterMatchMode="contains" >
                             <h:outputText value="#{invoice.invoicenumber}" />
                         </p:column>
 
-                        <p:column headerText="Příjemce">
+                        <p:column headerText="Příjemce" style="text-align: left;" sortBy="#{invoice.recipient}"
+                                  filterBy="#{invoice.recipient}"  filterMatchMode="contains">
                             <h:outputText value="#{invoice.recipient}" />
                         </p:column>
 
-                        <p:column headerText="Datum vystavení">
-                            <h:outputText value="#{invoice.created}" />
+                        <p:column headerText="Datum vystavení" width="110" sortBy="#{invoice.created}">
+                            <h:outputText value="#{invoiceWizardBean.convertDate(invoice.created)}" />
                         </p:column>
 
-                        <p:column headerText="Částka celkem">
-                            <h:outputText value="#{invoice.total} Kč" />
+                        <p:column headerText="DUZP" width="110" sortBy="#{invoice.duzp}">
+                            <h:outputText value="#{invoiceWizardBean.convertDate(invoice.duzp)}" />
                         </p:column>
 
-                        <p:column headerText="Stav">
-                            <h:outputText value="#{invoice.stateLabel}" />
+                        <p:column headerText="Datum splatnosti" width="110" sortBy="#{invoice.due}">
+                            <h:outputText value="#{invoiceWizardBean.convertDate(invoice.due)}" />
                         </p:column>
 
+                        <p:column headerText="Platební metoda" width="110" style="text-align: left;"
+                                  sortBy="#{invoice.methodIdmethod}" filterMatchMode="in">
+                            <h:outputText value="#{dashboardBean.getMethodTitle(invoice.methodIdmethod)}" />
+                        </p:column>
 
-                        <p:column style="width:32px;text-align: center">
-                            <p:commandButton action="invoice"  icon="ui-icon-pencil" title="Otevřít" >
-                                <f:setPropertyActionListener value="#{invoice}" target="#{invoiceBean.selectedInvoice}" />
+                        <p:column headerText="Celkem" style="text-align: right;" sortBy="#{invoice.total}">
+                            <h:outputText value="#{invoice.total}" >
+                                <f:convertNumber pattern="#0 Kč" locale="cs"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column width="45">
+                            <p:commandButton action="#{invoiceWizardBean.previewInvoice(invoice)}"  icon="ui-icon-pencil" title="Otevřít" >
+                                <f:setPropertyActionListener value="#{invoice}" target="#{invoiceWizardBean.invoice}" />
                             </p:commandButton>
                         </p:column>
 

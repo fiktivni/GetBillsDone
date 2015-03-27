@@ -55,7 +55,7 @@ public class IndexBean implements Serializable {
             HttpSession s = HttpSessionUtil.getSession();
             s.setAttribute("email", email);
  
-            return "dashboard";
+            return "invoices";
         } else {
  
             FacesContext.getCurrentInstance().addMessage(

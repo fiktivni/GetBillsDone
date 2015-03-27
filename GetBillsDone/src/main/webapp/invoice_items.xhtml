@@ -32,41 +32,11 @@
 
                     <p:panel id="invoice" header="Faktura - položky">
 
-                        <p:selectOneButton value="#{selectOneView.option}">
-                            <f:selectItem itemLabel="Hledat" itemValue="search" />
-                            <f:selectItem itemLabel="Vytvořit" itemValue="create" />
-                        </p:selectOneButton>
+                        
 
                         <p:messages id="itemEror" closable="true"/>
 
-                        <h:panelGrid id="newItemGrid" columns="2" cellpadding="5" style="margin: auto;">
-                            <p:outputLabel for="newTitle" value="Název:"/>                   
-                            <p:inputText id="newTitle" value="#{invoiceBean.item.title}" required="true" label="Název">
-                                <p:ajax event="change" update="newItemGrid" resetValues="false"/>
-                            </p:inputText>
-
-                            <p:outputLabel for="newCode" value="Kód:"/>
-                            <p:inputText id="newCode" value="#{invoiceBean.item.code}" required="false" label="Kód">
-                                <p:ajax event="change" update="newItemGrid" resetValues="false"/>
-                            </p:inputText>
-
-                            <p:outputLabel for="newTaxRate" value="Sazba DPH:"/>
-                            <p:inputText id="newTaxRate" value="#{invoiceBean.item.taxRate}" required="true" >
-                                <f:convertNumber pattern="###" locale="cs"/>
-                                <p:ajax event="change" update="newItemGrid"/>
-                            </p:inputText>
-
-                            <p:outputLabel for="newNetPrice" value="Cena bez DPH:"/>
-                            <p:inputText id="newNetPrice"  value="#{invoiceBean.item.netPrice}" required="true" >
-                                <f:convertNumber pattern="##0.00" locale="cs"/> 
-                                <p:ajax event="change" update="newItemGrid"  />
-                            </p:inputText>
-                            <p:outputLabel for="newFullPrice" value="Cena s DPH:"/>
-                            <p:inputText id="newFullPrice" value="#{invoiceBean.item.fullPrice}" required="true" >
-                                <f:convertNumber pattern="##0.00" locale="cs"/>
-                                <p:ajax event="change" update="newItemGrid"  />
-                            </p:inputText>
-                        </h:panelGrid>
+                        
                         
 
                         <h:panelGrid id="itemGrid" columns="8" cellpadding="0" cellspacing="2" >

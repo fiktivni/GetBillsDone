@@ -654,9 +654,10 @@
 
                                 <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
                                     <p:menuitem>
-                                        <p:commandButton ajax="false" actionListener="#{invoiceWizardBean.printInvoice}"  title="Vytisknout" icon="ui-icon-print" />
+                                        
                                     </p:menuitem>
                                     <f:facet name="options">
+                                        <p:commandButton ajax="false" actionListener="#{invoiceWizardBean.printInvoice}"  value="Vytisknout" title="Vytisknout" icon="ui-icon-print" />
                                         <p:commandButton id="save_button" action="#{invoiceWizardBean.saveInvoice}" value="Uložit"/>
                                     </f:facet>
                                 </p:menubar>
