@@ -59,5 +59,8 @@
         <property name="dic" type="string">
             <column name="dic" length="45" />
         </property>
+        <property name="locked" type="java.lang.Boolean">
+            <column name="locked" />
+        </property>
     </class>
 </hibernate-mapping>

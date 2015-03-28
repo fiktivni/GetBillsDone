@@ -26,19 +26,23 @@ public class Person implements java.io.Serializable {
     private Integer ico;
     private String dic;
     private String pscAndCityInOneLine;
+    private Boolean locked;
 
     public Person() {
         this.name = "";
         this.lastname = "";
+        locked = false;
      }
 
     public Person(int accountIdaccount) {
         this.accountIdaccount = accountIdaccount;
+        locked = false;
     }
 
     public Person(String name, String lastname) {
         this.name = name;
         this.lastname = lastname;
+        locked = false;
     }
 
     public Person(int accountIdaccount, String name, String lastname, String company, String street, String house, String city, Integer pcode, String state, Boolean isowner, Integer phone, String email, Integer fax, String www, String bankaccount, Integer ico, String dic) {
@@ -59,6 +63,7 @@ public class Person implements java.io.Serializable {
         this.bankaccount = bankaccount;
         this.ico = ico;
         this.dic = dic;
+        locked = false;
     }
 
     public Person(int accountIdaccount, String name, String lastname,
@@ -76,6 +81,7 @@ public class Person implements java.io.Serializable {
         this.isowner = isowner;
         this.email = email;
         this.ico = ico;
+        locked = false;
     }
 
     public Integer getId() {
@@ -246,6 +252,14 @@ public class Person implements java.io.Serializable {
      */
     public void setHouse(String house) {
         this.house = house;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
     public String getPscAndCityInOneLine() {

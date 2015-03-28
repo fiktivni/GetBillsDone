@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Položky | A-Faktury</title>
+        <title>Položky</title>
     </h:head>
     <h:body>
         <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
@@ -18,18 +18,16 @@
 
                 <p:panel header="Položky">
 
-
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
                         <p:menuitem>
-                            <p:commandButton title="Nová položka" action="#{itemBean.clear}" icon="ui-icon-document" />
+                            <p:commandButton title="Nová položka" action="#{itemBean.clear}" icon="ui-icon-document" value="Nová položka"/>
                         </p:menuitem>
                         <f:facet name="options">
-                            <p:inputText onkeypress="if (event.keyCode === 13) { document.getElementById('form:search_button').click(); return false; }" placeholder="Hledat" />
-                            <p:commandButton id="search_button" icon="ui-icon-search" action="#" process="@this" />
+                            
                         </f:facet>
                     </p:menubar>
 
-                    <p:dataTable paginator="true" var="item" value="#{dashboardBean.items}">
+                    <p:dataTable paginator="true" var="item" value="#{dashboardBean.unlockedItems}">
 
                         <p:column headerText="Název">
                             <p:outputLabel value="#{item.title}" />

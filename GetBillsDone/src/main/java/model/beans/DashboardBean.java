@@ -8,6 +8,7 @@ package model.beans;
 import controller.HttpSessionUtil;
 import controller.Queries;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -24,8 +25,11 @@ public class DashboardBean implements Serializable {
 
     private List<Invoice> invoices;
     private List<Person> persons;
+    private List<Person> unlockedPersons;
     private List<Item> items;
+    private List<Item> unlockedItems;
     private List<Method> methods;
+    
 
     private List<Invoice> filteredInvoices;
     
@@ -33,6 +37,7 @@ public class DashboardBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        
         HttpSession s = HttpSessionUtil.getSession();
 
         if (s != null) {
@@ -41,6 +46,9 @@ public class DashboardBean implements Serializable {
 
         invoices = Queries.getInvoices(Integer.parseInt(logedID));
         methods = Queries.getMethods();
+        persons = Queries.getPersonsAtAccountId(logedID);
+        items = Queries.getItemsAtAccountId(logedID);
+        
 
     }
 
@@ -130,6 +138,36 @@ public class DashboardBean implements Serializable {
             }
         }
         return null;
+    }
+
+    public List<Person> getUnlockedPersons() {
+        
+        unlockedPersons = new ArrayList<>();
+        for(Person person : persons){
+            if (!person.getLocked())
+                unlockedPersons.add(person);
+        }
+        
+        return unlockedPersons;
+    }
+
+    public void setUnlockedPersons(List<Person> unlockedPersons) {
+        this.unlockedPersons = unlockedPersons;
+    }
+
+    public List<Item> getUnlockedItems() {
+        
+        unlockedItems = new ArrayList<>();
+        for(Item item : items){
+            if (!item.getLocked())
+                unlockedItems.add(item);
+        }
+        
+        return unlockedItems;
+    }
+
+    public void setUnlockedItems(List<Item> unlockedItems) {
+        this.unlockedItems = unlockedItems;
     }
 
 }

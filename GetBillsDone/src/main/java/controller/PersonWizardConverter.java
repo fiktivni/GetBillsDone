@@ -35,7 +35,7 @@ public class PersonWizardConverter implements Converter, Serializable {
             int personId = Integer.parseInt(value);
             
             InvoiceWizardBean service = (InvoiceWizardBean) fc.getExternalContext().getSessionMap().get("invoiceWizardBean");
-            contacts = service.getContacts();
+            contacts = service.getUnlockedContacts();
             
             for (Person p : contacts) {
                 if (p.getId() == personId) {

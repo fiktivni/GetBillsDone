@@ -31,11 +31,20 @@ public class Queries {
 
     }
 
+    public static String hashPassword(String password) {
+        int hash = 1;
+        hash = hash * 31 + password.hashCode();
+        return hash+"";
+    }
+    
     /*
      Vyhledá v databázi kombinaci email/heslo. Pokud je nalezen jedem záznam, 
      vrátí true a zaznamená ID do session (TO DO)
      */
     public static boolean login(String email, String password) {
+        
+        password = hashPassword(password);
+        
         Account logedAccount = null;
         Session session = sessionFactory.openSession();
         Transaction tx;
@@ -164,7 +173,7 @@ public class Queries {
     }
 
     /**
-     * Returns account with the id.
+     * Returns account specified via parameter id.
      *
      * @param id
      * @return account
@@ -182,6 +191,31 @@ public class Queries {
             s.close();
         }
         return account;
+    }
+    
+    /**
+     * Returns list of used logins.
+     *
+     * @return usedLogins
+     */
+    public static List<String> getUsedLogins() {
+        
+        List<String> usedLogins = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+
+        try {
+            Query q = session.createQuery("from Account");
+            List<Account> accounts = (List<Account>) q.list();
+            for(Account account : accounts){
+                usedLogins.add(account.getEmail());
+            }
+        } catch (HibernateException e) {
+            
+        } finally {
+            session.close();
+        }
+        
+        return usedLogins;
     }
 
     /**
@@ -360,6 +394,8 @@ public class Queries {
 
     public static int createAccount(Account newAccount) {
 
+        newAccount.setPassword(Queries.hashPassword(newAccount.getPassword()));
+        
         Session session = null;
         State result = null;
 

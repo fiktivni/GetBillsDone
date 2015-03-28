@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Kontakty | A-Faktury</title>
+        <title>Kontakty</title>
     </h:head>
     <h:body>
         <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
@@ -18,15 +18,14 @@
 
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
                         <p:menuitem>
-                            <p:commandButton action="#{contactBean.clear}" icon="ui-icon-document" title="Nový kontakt" />
+                            <p:commandButton action="#{contactBean.clear}" icon="ui-icon-document" title="Nový kontakt" value="Nový kontakt"/>
                         </p:menuitem>
                         <f:facet name="options">
-                            <p:inputText onkeypress="if (event.keyCode === 13) { document.getElementById('form:search_button').click(); return false; }" placeholder="Hledat" />
-                            <p:commandButton id="search_button" icon="ui-icon-search" action="#" process="@this" />
+                            
                         </f:facet>
                     </p:menubar>
 
-                    <p:dataTable paginator="true" var="person" value="#{dashboardBean.persons}">
+                    <p:dataTable paginator="true" var="person" value="#{dashboardBean.unlockedPersons}">
 
                         <p:column headerText="Jméno">
                             <h:outputText value="#{person.wholename}" />

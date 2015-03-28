@@ -8,9 +8,12 @@ package model.beans;
 
 import controller.Queries;
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.validation.constraints.AssertTrue;
 import model.Account;
 import model.Person;
@@ -28,6 +31,7 @@ public class RegistrationBean implements Serializable{
     private Account account;
     private Person user;
     private String controlPassword;
+    private List<String> usedLogins;
 
     @PostConstruct
     public void init(){
@@ -36,14 +40,22 @@ public class RegistrationBean implements Serializable{
         user = new Person();
         user.setIsowner(true);
         controlPassword = "";
+        usedLogins = Queries.getUsedLogins();
     }
     
-    public String registerNewUser() {
+    public void registerNewUser() {
+        for(String usedLogin : usedLogins){
+            if(usedLogin == null ? account.getEmail() == null : usedLogin.equals(account.getEmail())){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Rezervovaný email!", "Tato emailová adresa je již používána"));
+                return;
+            }
+        }
         account.setId(Queries.createAccount(account));
         user.setAccountIdaccount(account.getId());
         user.setEmail(account.getEmail());
         Queries.createPerson(user);
-        return "index";
+        init();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Účet vytvořen"));
     }
     
     public boolean isAgreed() {

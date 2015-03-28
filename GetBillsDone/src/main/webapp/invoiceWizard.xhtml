@@ -120,7 +120,7 @@
                                     <p:outputLabel for="customer" value="Jméno:"/>
                                     <p:autoComplete id="customer" value="#{invoiceWizardBean.customer}" completeMethod="#{invoiceWizardBean.completeContact}"
                                                     var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
-                                                    forceSelection="true" dropdown="false" required="true" >
+                                                    forceSelection="true" dropdown="false" >
                                         <p:ajax event="itemSelect" update="customerPanel" resetValues="true" listener="#{invoiceWizardBean.updateAddress}"/>
                                     </p:autoComplete>
                                     <p:spacer></p:spacer>
@@ -208,7 +208,7 @@
                                     <p:outputLabel for="address" value="Jméno:"/>
                                     <p:autoComplete id="address" value="#{invoiceWizardBean.address}" completeMethod="#{invoiceWizardBean.completeContact}"
                                                     var="person" itemLabel="#{person.wholename}" itemValue="#{person}" converter="personWizardConverter"
-                                                    forceSelection="true" dropdown="false" required="true">
+                                                    forceSelection="true" dropdown="false" >
                                         <p:ajax event="itemSelect" update="addressPanel" resetValues="true"/>
                                     </p:autoComplete>
                                     <p:spacer></p:spacer>
@@ -288,7 +288,7 @@
                                     <p:outputLabel for="searchItemCode" value="Kód:"/>
                                     <p:autoComplete id="searchItemCode" value="#{invoiceWizardBean.item}" completeMethod="#{invoiceWizardBean.completeItemCode}"
                                                     var="item" itemLabel="#{item.code}" itemValue="#{item}" converter="itemWizardConverter"
-                                                    forceSelection="true" required="true" dropdown="false">
+                                                    forceSelection="true" dropdown="false">
                                         <p:ajax event="itemSelect" update="searchItemGrid" resetValues="true"/>
                                     </p:autoComplete>
                                     <p:spacer></p:spacer>
@@ -298,7 +298,7 @@
                                     <p:outputLabel for="searchItemTitle" value="Položka:"/>
                                     <p:autoComplete id="searchItemTitle" value="#{invoiceWizardBean.item}" completeMethod="#{invoiceWizardBean.completeItemTitle}"
                                                     var="item" itemLabel="#{item.title}" itemValue="#{item}" converter="itemWizardConverter"
-                                                    forceSelection="true" required="true" dropdown="false">
+                                                    forceSelection="true" dropdown="false">
                                         <p:ajax event="itemSelect" update="searchItemGrid" resetValues="true"/>
                                     </p:autoComplete>
                                     <p:outputLabel for="searchItemCount" value="Množství:"/>

@@ -18,11 +18,9 @@
                 <p:panel header="Faktury">
 
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
+                        
                         <p:menuitem>
-                            <p:commandButton title="Nová (OLD)" label="Nová (OLD)" value="Nová (OLD)" action="invoice" icon="ui-icon-document" />
-                        </p:menuitem>
-                        <p:menuitem>
-                            <p:commandButton title="Nová (NEW)" label="Nová (NEW)" value="Nová (NEW)" actionListener="#{invoiceWizardBean.init}" action="invoiceWizard" icon="ui-icon-document" />
+                            <p:commandButton title="Nová faktura" label="Nová faktura" value="Nová faktura" actionListener="#{invoiceWizardBean.init}" action="invoiceWizard" icon="ui-icon-document" />
                         </p:menuitem>
                         
                         <f:facet name="options">

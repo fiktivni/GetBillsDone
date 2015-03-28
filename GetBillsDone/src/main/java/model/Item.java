@@ -13,10 +13,12 @@ public class Item implements java.io.Serializable {
     private double fullPrice;
     private String code;
     private InvoiceHasItem invoiceHasItem;
+    private Boolean locked;
 
     public Item() {
         this.invoiceHasItem = new InvoiceHasItem();
         invoiceHasItem.setCount(1);
+        locked = false;
     }
 
     public Item(int accountIdaccount, int taxRate, String title, double netPrice, double fullPrice, String code) {
@@ -28,6 +30,7 @@ public class Item implements java.io.Serializable {
         this.code = code;
         this.invoiceHasItem = new InvoiceHasItem();
         invoiceHasItem.setCount(1);
+        locked = false;
     }
 
     public Integer getId() {
@@ -96,6 +99,14 @@ public class Item implements java.io.Serializable {
     public void setFullPrice(double fullPrice) {
         this.netPrice= fullPrice / (100.00 + (double)taxRate) * 100;
         this.fullPrice = fullPrice;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
 }

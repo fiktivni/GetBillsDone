@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 import model.Item;
@@ -32,7 +31,6 @@ public class ItemBean implements Serializable{
     private Item item;
     private List<Rate> rates;
     private Rate rate;
-    private String option;
 
     @PostConstruct
     public void init() {

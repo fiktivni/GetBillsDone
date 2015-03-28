@@ -39,8 +39,9 @@ import org.primefaces.event.FlowEvent;
 @ManagedBean(name = "invoiceWizardBean")
 public class InvoiceWizardBean implements Serializable {
 
-    @Inject DashboardBean dashboard;
-    
+    @Inject
+    DashboardBean dashboard;
+
     private Invoice invoice = new Invoice();
     private Person customer = new Person();
     private Person address = new Person();
@@ -49,62 +50,53 @@ public class InvoiceWizardBean implements Serializable {
     private final int userId = getUserID();
     private Person user = new Person();
     private List<Person> contacts = new ArrayList<>();
+    private List<Person> unlockedContacts = new ArrayList();
     private List<Method> methods = new ArrayList();
     private List<Invoice> invoices = new ArrayList();
     private List<Item> allItems = new ArrayList<>();
     private List<Item> addedItems = new ArrayList<>();
-
+    private List<Item> unlockedItems = new ArrayList();
     private String customerOption;
     private boolean renderSearchCustomer;
     private boolean renderCreateCustomer;
-
     private String addressOption;
     private boolean renderSearchAddress;
     private boolean renderCreateAddress;
-
     private String itemOption;
     private boolean renderSearchItem;
     private boolean renderCreateItem;
-
     private boolean isSingleAddress;
-
     private double sumNetPrice = 0;
     private double sumFullPrice = 0;
     private double sumTax = 0;
 
     @PostConstruct
     public void init() {
+
         invoice = new Invoice();
         customer = new Person();
         address = new Person();
         item = new Item();
-        //contacts = Queries.getPersonsAtAccountId("" + userId);
         contacts = dashboard.getPersons();
-        //methods = Queries.getMethods();
+        unlockedContacts = dashboard.getUnlockedPersons();
         methods = dashboard.getMethods();
-        //invoices = Queries.getInvoices(userId);
         invoices = dashboard.getInvoices();
-        allItems = Queries.getItemsAtAccountId("" + userId);
+        allItems = dashboard.getItems();
+        unlockedItems = dashboard.getUnlockedItems();
         addedItems = new ArrayList<>();
         user = Queries.getUser("" + userId);
-
         sumNetPrice = 0;
         sumFullPrice = 0;
-
         customerOption = "search";
         renderSearchCustomer = customerOption.equals("search");
         renderCreateCustomer = customerOption.equals("create");
-
         addressOption = "search";
         renderSearchAddress = addressOption.equals("search");
         renderCreateAddress = addressOption.equals("create");
-
         itemOption = "search";
         renderSearchItem = itemOption.equals("search");
         renderCreateItem = itemOption.equals("create");
-
         isSingleAddress = true;
-
         Calendar cal = Calendar.getInstance();
         invoice.setCreated(cal.getTime());
         invoice.setDuzp(cal.getTime());
@@ -115,11 +107,11 @@ public class InvoiceWizardBean implements Serializable {
         invoice.setInvoicenumber(cal.get(Calendar.YEAR) * 100000 + invoices.size() + 1);
         invoice.setConstantsymbol(308);
         invoice.setVariablesymbol(invoice.getInvoicenumber());
-
         method = methods.get(1);
-
         address.setAccountIdaccount(userId);
+        address.setIsowner(false);
         customer.setAccountIdaccount(userId);
+        customer.setIsowner(false);
         item.setAccountIdaccount(userId);
     }
 
@@ -319,6 +311,22 @@ public class InvoiceWizardBean implements Serializable {
         this.sumFullPrice = sumFullPrice;
     }
 
+    public List<Person> getUnlockedContacts() {
+        return unlockedContacts;
+    }
+
+    public void setUnlockedContacts(List<Person> unlockedContacts) {
+        this.unlockedContacts = unlockedContacts;
+    }
+
+    public List<Item> getUnlockedItems() {
+        return unlockedItems;
+    }
+
+    public void setUnlockedItems(List<Item> unlockedItems) {
+        this.unlockedItems = unlockedItems;
+    }
+
     private int getUserID() {
         HttpSession s = HttpSessionUtil.getSession();
         int userID = -1;
@@ -360,6 +368,8 @@ public class InvoiceWizardBean implements Serializable {
             Queries.updateItem(item);
         }
         allItems = Queries.getItemsAtAccountId("" + userId);
+        dashboard.setItems(allItems);
+        unlockedItems = dashboard.getUnlockedItems();
     }
 
     public List<Person> completeContact(String query) {
@@ -367,7 +377,7 @@ public class InvoiceWizardBean implements Serializable {
         List<Person> found = new ArrayList<>();
         int validResultsCount = 0;
 
-        for (Person person : contacts) {
+        for (Person person : unlockedContacts) {
             if (person.getWholename().toLowerCase().contains(query)) {
                 if (!Objects.equals(person.getId(), customer.getId())) {
                     validResultsCount++;
@@ -406,7 +416,7 @@ public class InvoiceWizardBean implements Serializable {
 
         int validResultsCount = 0;
 
-        for (Item i : allItems) {
+        for (Item i : unlockedItems) {
             if (i.getCode().toLowerCase().contains(query)) {
                 validResultsCount++;
                 if (validResultsCount <= 10) {
@@ -425,7 +435,7 @@ public class InvoiceWizardBean implements Serializable {
 
         int validResultsCount = 0;
 
-        for (Item i : allItems) {
+        for (Item i : unlockedItems) {
             if (i.getTitle().toLowerCase().contains(query)) {
                 validResultsCount++;
                 if (validResultsCount <= 10) {
@@ -498,39 +508,35 @@ public class InvoiceWizardBean implements Serializable {
 
         Double total = getSumFullPrice();
 
-        /*
-         Save invoice and return her ID to variable
-         */
         invoice.setStateIdstate(1);
         invoice.setMethodIdmethod(method.getId());
         invoice.setTotal(total.intValue());
         invoice.setId(Queries.createInvoice(invoice));
-
         Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), userId, 1));
 
-        /*
-         Save recipient, customer and fill invoice with their ID and return her ID to variable
-         */
         customer.setIsowner(false);
-        if (customer.getId() == null) {
-            customer.setId(Queries.createPerson(customer));
-        }
-        Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), customer.getId(), 2));
-
+        savePerson(customer, 2);
         if (isSingleAddress) {
             Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), customer.getId(), 3));
         } else {
-            if (address.getId() == null) {
-                address.setId(Queries.createPerson(address));
-            }
-            Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), address.getId(), 3));
+            address.setIsowner(false);
+            savePerson(address, 3);
         }
+        contacts = Queries.getPersonsAtAccountId(userId+"");
+        dashboard.setPersons(contacts);
+        unlockedContacts = dashboard.getUnlockedPersons();
 
         for (Item i : addedItems) {
+            cloneItem(i);
+            i.setLocked(true);
             i.getInvoiceHasItem().setInvoiceIdinvoice(invoice.getId());
             i.getInvoiceHasItem().setItemIditem(i.getId());
+            Queries.updateItem(i);
             Queries.createInvoiceHasItem(i.getInvoiceHasItem());
         }
+        allItems = Queries.getItemsAtAccountId(userId + "");
+        dashboard.setItems(allItems);
+        unlockedItems = dashboard.getUnlockedItems();
 
         invoices.add(invoice);
         dashboard.setInvoices(invoices);
@@ -577,9 +583,11 @@ public class InvoiceWizardBean implements Serializable {
                     switch (invoiceHasPerson.getRelation()) {
                         case 1: // We already know the USER
                             break;
-                        case 2: customer = contact;
+                        case 2:
+                            customer = contact;
                             break;
-                        case 3: address = contact;
+                        case 3:
+                            address = contact;
                             break;
                     }
                 }
@@ -588,5 +596,57 @@ public class InvoiceWizardBean implements Serializable {
         }
 
         return "invoicePreview";
+    }
+
+    private void savePerson(Person person, int relation) {
+        
+        clonePerson(person);
+        person.setLocked(true);
+        
+        if (person.getId() == null) {
+            person.setId(Queries.createPerson(person));
+        } else {
+            Queries.updatePerson(person);
+        }
+        
+        Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), person.getId(), relation));
+        
+    }
+
+    private void cloneItem(Item i) {
+        Item clone = new Item();
+        clone.setAccountIdaccount(i.getAccountIdaccount());
+        clone.setCode(i.getCode());
+        clone.setFullPrice(i.getFullPrice());
+        clone.setInvoiceHasItem(i.getInvoiceHasItem());
+        clone.setLocked(false);
+        clone.setNetPrice(i.getNetPrice());
+        clone.setTaxRate(i.getTaxRate());
+        clone.setTitle(i.getTitle());
+        Queries.createItem(clone);
+
+    }
+
+    private void clonePerson(Person p) {
+        Person clone = new Person();
+        clone.setAccountIdaccount(p.getAccountIdaccount());
+        clone.setBankaccount(p.getBankaccount());
+        clone.setCity(p.getCity());
+        clone.setCompany(p.getCompany());
+        clone.setDic(p.getDic());
+        clone.setEmail(p.getEmail());
+        clone.setFax(p.getFax());
+        clone.setHouse(p.getHouse());
+        clone.setIco(p.getIco());
+        clone.setIsowner(false);
+        clone.setLastname(p.getLastname());
+        clone.setLocked(false);
+        clone.setName(p.getName());
+        clone.setPcode(p.getPcode());
+        clone.setPhone(p.getPhone());
+        clone.setState(p.getState());
+        clone.setStreet(p.getStreet());
+        clone.setWww(p.getWww());
+        Queries.createPerson(clone);
     }
 }

@@ -22,7 +22,7 @@ public class ItemWizardConverter implements Converter {
             int itemId = Integer.parseInt(value);
             
             InvoiceWizardBean service = (InvoiceWizardBean) fc.getExternalContext().getSessionMap().get("invoiceWizardBean");
-            items = service.getAllItems();
+            items = service.getUnlockedItems();
             
             for (Item i : items){
                 if (i.getId() == itemId){

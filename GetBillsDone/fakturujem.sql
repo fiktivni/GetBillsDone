@@ -15,7 +15,7 @@ MySQL - 5.6.20 : Database - fakturujem
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`fakturujem` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `fakturujem`;account
+USE `fakturujem`;
 
 /*Table structure for table `account` */
 
@@ -29,8 +29,6 @@ CREATE TABLE `account` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `account` */
-
-insert  into `account`(`id`,`email`,`password`) values (1,'michal.prenner@gmail.com','123456'),(2,'jaroslav.huna@gmail.com','qwertzasd');
 
 /*Table structure for table `invoice` */
 
@@ -53,8 +51,6 @@ CREATE TABLE `invoice` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `invoice` */
-
-insert  into `invoice`(`id`,`invoicenumber`,`account_idaccount`,`state_idstate`,`method_idmethod`,`created`,`due`,`duzp`,`variablesymbol`,`constantsymbol`,`specificsymbol`,`total`) values (1,10,2,1,1,'2014-09-04','2014-08-20','2014-08-26',777,NULL,NULL,999);
 
 /*Table structure for table `invoice_has_item` */
 
@@ -84,8 +80,6 @@ CREATE TABLE `invoice_has_person` (
 
 /*Data for the table `invoice_has_person` */
 
-insert  into `invoice_has_person`(`id`,`invoice_idinvoice`,`person_idperson`,`relation`) values (1,1,2,1),(2,1,3,2),(3,1,4,3);
-
 /*Table structure for table `item` */
 
 DROP TABLE IF EXISTS `item`;
@@ -98,12 +92,11 @@ CREATE TABLE `item` (
   `net_price` double NOT NULL,
   `full_price` double NOT NULL,
   `code` varchar(45) DEFAULT NULL,
+  `locked` bit(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `item` */
-
-insert  into `item`(`id`,`account_idaccount`,`tax_rate`,`title`,`net_price`,`full_price`,`code`) values (1,1,21,'Raspberry Pi',651,788,'RPI B+'),(2,1,21,'Instalace služby',500,605,'SPI_01');
 
 /*Table structure for table `method` */
 
@@ -142,12 +135,11 @@ CREATE TABLE `person` (
   `bankaccount` varchar(45) DEFAULT NULL,
   `ico` int(11) DEFAULT NULL,
   `dic` varchar(45) DEFAULT NULL,
+  `locked` bit(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 /*Data for the table `person` */
-
-insert  into `person`(`id`,`account_idaccount`,`name`,`lastname`,`company`,`street`,`house`,`city`,`pcode`,`state`,`isowner`,`phone`,`email`,`fax`,`www`,`bankaccount`,`ico`,`dic`) values (1,1,'František','Lála','',' ',NULL,'',NULL,'Česká Republika','',NULL,'frlala@seznam.cz',NULL,NULL,NULL,NULL,NULL),(2,2,'Jaroslav','Hůna','Grafici a.s.',' ',NULL,'',NULL,'Česká Republika','\0',NULL,'jaroslav.huna@gmail.com',NULL,NULL,NULL,NULL,NULL),(3,2,'Michal','Prenner','Michal Prenner','A. Krejčího','2050/2','České Budějovice',37007,'Česká Republika','',NULL,'michal.prenner@gmail.com',NULL,'www.rpishop.cz',NULL,NULL,'CZ9007071293'),(4,2,'Lenka','Prennerová','','A. Krejčího','2050/2','České Budějovice',37007,'Česká Republika','\0',NULL,'willwill@seznam.cz',NULL,NULL,NULL,NULL,NULL),(5,2,'Kamča','Němotová','Lili s.r.o.','A. Krejčího','2050/2','České Budějovice',37007,'Česká Republika','\0',NULL,'kamca.nemotova@gmail.com',NULL,NULL,NULL,123456,NULL);
 
 /*Table structure for table `rate` */
 
