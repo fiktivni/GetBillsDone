@@ -522,7 +522,7 @@ public class InvoiceWizardBean implements Serializable {
             address.setIsowner(false);
             savePerson(address, 3);
         }
-        contacts = Queries.getPersonsAtAccountId(userId+"");
+        contacts = Queries.getPersonsAtAccountId(userId + "");
         dashboard.setPersons(contacts);
         unlockedContacts = dashboard.getUnlockedPersons();
 
@@ -599,18 +599,18 @@ public class InvoiceWizardBean implements Serializable {
     }
 
     private void savePerson(Person person, int relation) {
-        
+
         clonePerson(person);
         person.setLocked(true);
-        
+
         if (person.getId() == null) {
             person.setId(Queries.createPerson(person));
         } else {
             Queries.updatePerson(person);
         }
-        
+
         Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), person.getId(), relation));
-        
+
     }
 
     private void cloneItem(Item i) {

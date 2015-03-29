@@ -20,7 +20,7 @@
 
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
                         <p:menuitem>
-                            <p:commandButton title="Nová položka" action="#{itemBean.clear}" icon="ui-icon-document" value="Nová položka"/>
+                            <p:commandButton title="Nová položka" action="item" actionListener="#{itemBean.init}" icon="ui-icon-document" value="Nová položka"/>
                         </p:menuitem>
                         <f:facet name="options">
                             

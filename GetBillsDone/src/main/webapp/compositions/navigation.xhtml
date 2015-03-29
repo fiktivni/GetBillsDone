@@ -15,12 +15,12 @@
             </p:menuitem>
             <p:menuitem>
                 <p:splitButton value="Kontakty" action="contacts">
-                    <p:menuitem value="Nový" icon="ui-icon-document" action="#{contactBean.clear}" />
+                    <p:menuitem value="Nový" icon="ui-icon-document" actionListener="#{contactBean.init}" action="contact" />
                 </p:splitButton>
             </p:menuitem>
             <p:menuitem>
                 <p:splitButton value="Položky" action="items">
-                    <p:menuitem value="Nová" icon="ui-icon-document" action="item"/>
+                    <p:menuitem value="Nová" icon="ui-icon-document" actionListener="#{itemBean.init}" action="item"/>
                 </p:splitButton>
             </p:menuitem>
             <f:facet name="options">

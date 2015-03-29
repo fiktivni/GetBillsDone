@@ -5,40 +5,34 @@
  */
 package model.beans;
 
-import controller.HttpSessionUtil;
 import controller.Queries;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpSession;
+import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
 import model.Person;
-import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author fiktivni
  */
-@Named("contactBean")
 @SessionScoped
+@ManagedBean(name = "contactBean")
 public class ContactBean implements Serializable {
 
+    @Inject
+    DashboardBean dashboard;
+    
     private Person contact;
+    private int userID;
 
     @PostConstruct
     public void init() {
-        int userID = getUserID();
-        contact = new Person();
-        contact.setAccountIdaccount(userID);
-        contact.setIsowner(false);
-    }
-    
-    public String clear(){
-        init();
-        RequestContext.getCurrentInstance().update("form:grid");
-        return "contact";
+        userID = Integer.parseInt(dashboard.getLogedID());
+        newUser();
     }
 
     public void saveContact() {
@@ -48,16 +42,18 @@ public class ContactBean implements Serializable {
             Queries.updatePerson(contact);
         }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Uloženo"));
+        refreshContacts();
     }
     
     public void newUser() {
         contact = new Person();
-        contact.setAccountIdaccount(getUserID());
+        contact.setAccountIdaccount(userID);
         contact.setIsowner(false);
     }
 
     public String deleteContact() {
         Queries.deletePerson(contact);
+        refreshContacts();
         return "contacts";
     }
 
@@ -69,13 +65,8 @@ public class ContactBean implements Serializable {
         this.contact = contact;
     }
 
-    private int getUserID() {
-        HttpSession s = HttpSessionUtil.getSession();
-        int userID = -1;
-        if (s != null) {
-            userID = Integer.parseInt((s.getAttribute("logedid").toString()));
-        }
-        return userID;
+    private void refreshContacts() {
+        dashboard.setPersons(Queries.getPersonsAtAccountId(userID+""));
     }
 
 }

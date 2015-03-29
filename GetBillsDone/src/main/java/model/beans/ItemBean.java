@@ -6,100 +6,67 @@
 
 package model.beans;
 
-import controller.HttpSessionUtil;
 import controller.Queries;
 import java.io.Serializable;
-import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpSession;
+import javax.inject.Inject;
 import model.Item;
-import model.Rate;
-import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author fiktivni
  */
-@Named("itemBean")
 @SessionScoped
+@ManagedBean(name = "itemBean")
 public class ItemBean implements Serializable{
     
+    @Inject
+    DashboardBean dashboard;
+    
     private Item item;
-    private List<Rate> rates;
-    private Rate rate;
+    private int userID;
 
     @PostConstruct
     public void init() {
-        rates = Queries.getRates();
+        userID = Integer.parseInt(dashboard.getLogedID());
         item = new Item();
-        item.setAccountIdaccount(getUserID());
+        item.setAccountIdaccount(userID);
         item.setTitle("");
         item.setCode("");
-        rate = rates.get(0);
-        item.setTaxRate(rate.getValue());
+        item.setTaxRate(21);
         item.setNetPrice(0);
         item.setFullPrice(0);
     }
 
     public Item getItem() {
-        // TODO
         return item;
     }
 
     public void setItem(Item item) {
-        // TODO
         this.item = item;
     }
-
-    public List<Rate> getRates() {
-        return rates;
-    }
-
-    public void setRates(List<Rate> rates) {
-        this.rates = rates;
-    }
-
-    public Rate getRate() {
-        return rate;
-    }
-
-    public void setRate(Rate rate) {
-        item.setTaxRate(rate.getValue());
-        this.rate = rate;
-    }
     
-    public String saveItem(){
+    public void saveItem(){
         if (item.getId() == null) {
             Queries.createItem(item);
         } else {
             Queries.updateItem(item);
         }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Uloženo"));
-        
-        return "items";
+        refreshItems();
     }    
     
     public String deleteItem(){
         Queries.deleteItem(item);
+        refreshItems();
         return "items";
     }
-    
-    public String clear(){
-        init();
-        RequestContext.getCurrentInstance().update("form:grid");
-        return "item";
-    }
-       
-    private int getUserID() {
-        HttpSession s = HttpSessionUtil.getSession();
-        int userID = -1;
-        if (s != null) {
-            userID = Integer.parseInt((s.getAttribute("logedid").toString()));
-        }
-        return userID;
+
+    private void refreshItems() {
+        dashboard.setItems(Queries.getItemsAtAccountId(userID+""));
     }
 }

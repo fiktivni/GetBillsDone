@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Registrace | A-Faktury</title>
+        <title>Registrace</title>
         <link rel="icon" 
               type="image/png" 
               href="images/fav.png" />
@@ -22,69 +22,124 @@
 
                     <p:messages id="msg" closable="true"/>
 
-                    <h:panelGrid id="grid" columns="4" cellpadding="5" style="margin: auto;">
+                    <h:panelGrid id="grid" columns="4" cellpadding="5" >
 
                         <p:outputLabel for="email" value="E-mail:"/>                   
-                        <p:inputText id="email" value="#{registrationBean.account.email}" required="true" label="E-mail" validatorMessage="Chyba"/>
+                        <p:inputText id="email" label="E-mail" value="#{registrationBean.account.email}"
+                                     validatorMessage="Neplatný formát emailové adresy"
+                                     required="true">
+                            <f:validateRegex
+                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
 
                         <p:outputLabel for="password1" value="Heslo:"/>                   
-                        <p:password id="password1" value="#{registrationBean.account.password}" required="true" match="password2" label="Heslo" validatorMessage="Heslo se musí shodovat a mít 6 až 45 znaků " />
+                        <p:password id="password1" value="#{registrationBean.account.password}"
+                                    match="password2"
+                                    label="Heslo"
+                                    validatorMessage="Hesla se neshodují"
+                                    required="true" />
                         <p:outputLabel for="password2" value="Heslo znovu:"/>                   
-                        <p:password id="password2" value="#{registrationBean.controlPassword}" required="true" label="Heslo znovu"/>
+                        <p:password id="password2" value="#{registrationBean.controlPassword}"
+                                    label="Heslo znovu"
+                                    validatorMessage="Prázdný vstup"
+                                    required="true"/>
 
                         <p:outputLabel for="name" value="Jméno:"/>                   
-                        <p:inputText id="name" value="#{registrationBean.user.name}" required="false" label="Jméno" validatorMessage="Chyba" />
+                        <p:inputText id="name" value="#{registrationBean.user.name}"
+                                     label="Jméno"
+                                     required="false" />
                         <p:outputLabel for="lastName" value="Příjmení:"/>                   
-                        <p:inputText id="lastName" value="#{registrationBean.user.lastname}" required="false" label="Příjmení" validatorMessage="Chyba" />
+                        <p:inputText id="lastName" value="#{registrationBean.user.lastname}"
+                                     label="Příjmení"
+                                     required="false" />
 
                         <p:outputLabel for="company" value="Firma:"/>                   
-                        <p:inputText id="company" value="#{registrationBean.user.company}" required="false" label="Firma" validatorMessage="Chyba" />
+                        <p:inputText id="company" value="#{registrationBean.user.company}"
+                                     label="Firma"
+                                     required="false" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
-                        <p:outputLabel for="ico" value="IČO:"/>                   
-                        <p:inputText id="ico" value="#{registrationBean.user.ico}" required="false" label="IČO" validatorMessage="Chyba" />
+                        <p:outputLabel for="ico" value="IČO:"/>
+                        <p:inputMask id="ico" value="#{registrationBean.user.ico}"
+                                     mask="99999999"
+                                     label="IČO"
+                                     validatorMessage="Nesprávný formát, IČO musí mít 8 číslic"
+                                     required="false"/>
+
                         <p:outputLabel for="dic" value="DIČ:"/>                   
-                        <p:inputText id="dic" value="#{registrationBean.user.dic}" required="false" label="DIČ" validatorMessage="Chyba" />
+                        <p:inputMask id="dic" value="#{registrationBean.user.dic}"
+                                     mask="aa9999999999"
+                                     label="DIČ"
+                                     validatorMessage="Nesprávný formát, DIČ musí mít 2 písmena následovaná 10 číslicemi"
+                                     required="false"/>
 
                         <p:outputLabel for="bankaccount" value="Číslo účtu:"/>                   
-                        <p:inputText id="bankaccount" value="#{registrationBean.user.bankaccount}" required="false" label="Číslo účtu" />
+                        <p:inputText id="bankaccount" value="#{registrationBean.user.bankaccount}"
+                                     required="false"
+                                     label="Číslo účtu" >
+                        </p:inputText>
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
                         <p:outputLabel for="street" value="Ulice:"/>                   
-                        <p:inputText id="street" value="#{registrationBean.user.street}" required="false" label="Ulice" validatorMessage="Chyba"/>
-                        <p:outputLabel for="house" value="Číslo:"/>                   
-                        <p:inputText id="house" value="#{registrationBean.user.house}" required="false" label="Číslo" validatorMessage="Chyba"/>
+                        <p:inputText id="street" value="#{registrationBean.user.street}"
+                                     label="Ulice"
+                                     required="false" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
 
                         <p:outputLabel for="pcode" value="PSČ:"/>                   
-                        <p:inputText id="pcode" value="#{registrationBean.user.pcode}" required="false" label="PSČ" validatorMessage="Chyba: PSČ musí být pětimístné číslo např. 37001"/>
+                        <p:inputMask id="pcode" value="#{registrationBean.user.pcode}"
+                                     mask="99999"
+                                     label="PSČ"
+                                     validatorMessage="Nesprávný formát, PSČ musí mít 5 číslic"
+                                     required="false"/>
                         <p:outputLabel for="city" value="Město:"/>                   
-                        <p:inputText  id="city" value="#{registrationBean.user.city}" required="false" label="Město" validatorMessage="Chyba"/>
+                        <p:inputText  id="city" value="#{registrationBean.user.city}"
+                                      label="Město"
+                                      required="false"/>
 
                         <p:outputLabel for="state" value="Stát:"/>                   
-                        <p:inputText id="state" value="#{registrationBean.user.state}" required="false" label="Stát" />
+                        <p:inputText id="state" value="#{registrationBean.user.state}"
+                                     label="Stát"
+                                     required="false" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
                         <p:outputLabel for="phone" value="Telefon:"/>                   
-                        <p:inputText id="phone" value="#{registrationBean.user.phone}" required="false" label="Telefon" />
+                        <p:inputMask id="phone" value="#{registrationBean.user.phone}"
+                                     mask="999999999"
+                                     label="Telefon"
+                                     validatorMessage="Nesprávný formát, Telefon musí mít 9 číslic"
+                                     required="false" />
                         <p:outputLabel for="fax" value="Fax:"/>                   
-                        <p:inputText id="fax" value="#{registrationBean.user.fax}" required="false" label="Fax" />
+                        <p:inputMask id="fax" value="#{registrationBean.user.fax}"
+                                     mask="999999999"
+                                     label="Fax"
+                                     validatorMessage="Nesprávný formát, Fax musí mít 9 číslic"
+                                     required="false" />
 
 
                         <f:facet name="footer">
-                            <p:selectBooleanCheckbox itemLabel="Souhlasím s podmínkami služby." id="agreed" value="#{registrationBean.agreed}" label="Souhlas:" validatorMessage="S podmínkami služby je nutné souhlasit"/>
+                            <p:selectBooleanCheckbox id="agreed" value="#{registrationBean.agreed}"
+                                                     itemLabel="Souhlasím s podmínkami služby."
+                                                     label="Souhlas:" />
                         </f:facet>
 
                     </h:panelGrid>
 
                     <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
                         <f:facet name="options">
-                            <p:commandButton id="register_button" action="#{registrationBean.registerNewUser}" value="Registrovat" update="grid msg" ajax="false" validateClient="true"/>
+                            <p:commandButton id="register_button"
+                                             action="#{registrationBean.registerNewUser}"
+                                             value="Registrovat"
+                                             update="grid msg"
+                                             ajax="false"
+                                             validateClient="true"/>
                         </f:facet>
                     </p:menubar>
 

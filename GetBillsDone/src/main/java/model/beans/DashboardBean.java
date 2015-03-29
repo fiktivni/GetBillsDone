@@ -53,7 +53,6 @@ public class DashboardBean implements Serializable {
     }
 
     public List<Item> getItems() {
-        items = Queries.getItemsAtAccountId(logedID);
         return items;
     }
 
@@ -73,7 +72,6 @@ public class DashboardBean implements Serializable {
      * @return the persons
      */
     public List<Person> getPersons() {
-        persons = Queries.getPersonsAtAccountId(logedID);
         return persons;
     }
 
