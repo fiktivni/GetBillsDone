@@ -358,6 +358,9 @@ public class InvoiceWizardBean implements Serializable {
     public void addNewItem() {
         saveItem();
         addItem();
+        renderSearchItem = true;
+        renderCreateItem = false;
+        itemOption = "search";
     }
 
     public void saveItem() {
