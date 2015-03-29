@@ -32,7 +32,9 @@ public class ContactBean implements Serializable {
     @PostConstruct
     public void init() {
         userID = Integer.parseInt(dashboard.getLogedID());
-        newUser();
+        contact = new Person();
+        contact.setAccountIdaccount(userID);
+        contact.setIsowner(false);
     }
 
     public void saveContact() {
@@ -43,12 +45,6 @@ public class ContactBean implements Serializable {
         }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Uloženo"));
         refreshContacts();
-    }
-    
-    public void newUser() {
-        contact = new Person();
-        contact.setAccountIdaccount(userID);
-        contact.setIsowner(false);
     }
 
     public String deleteContact() {

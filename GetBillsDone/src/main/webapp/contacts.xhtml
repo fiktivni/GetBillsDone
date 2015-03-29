@@ -25,25 +25,43 @@
                         </f:facet>
                     </p:menubar>
 
-                    <p:dataTable paginator="true" var="person" value="#{dashboardBean.unlockedPersons}">
+                    <p:dataTable value="#{dashboardBean.unlockedPersons}"
+                                 var="person"
+                                 filteredValue="#{dashboardBean.filteredPersons}"
+                                 widgetVar="contactsTable"
+                                 paginator="true" rows="10" rowsPerPageTemplate="10,20,30" >
 
-                        <p:column headerText="Jméno">
+                        <p:column headerText="Jméno"
+                                  sortBy="#{person.wholename}"
+                                  filterBy="#{person.wholename}"  filterMatchMode="contains" >
                             <h:outputText value="#{person.wholename}" />
                         </p:column>
 
-                        <p:column headerText="Firma">
+                        <p:column headerText="Firma"
+                                  sortBy="#{person.company}"
+                                  filterBy="#{person.company}"  filterMatchMode="contains" >
                             <h:outputText value="#{person.company}" />
                         </p:column>
+                        
+                        <p:column headerText="Adresa"
+                                  sortBy="#{person.address}"
+                                  filterBy="#{person.address}"  filterMatchMode="contains" >
+                            <h:outputText value="#{person.address}" />
+                        </p:column>
 
-                        <p:column headerText="Email">
+                        <p:column headerText="Email"
+                                  sortBy="#{person.email}"
+                                  filterBy="#{person.email}"  filterMatchMode="contains" >
                             <h:outputText value="#{person.email}" />
                         </p:column>
 
-                        <p:column headerText="Telefon">
+                        <p:column headerText="Telefon"
+                                  sortBy="#{person.phone}"
+                                  filterBy="#{person.phone}"  filterMatchMode="contains">
                             <h:outputText value="#{person.phone}" />
                         </p:column>
 
-                        <p:column style="width:32px;text-align: center">
+                        <p:column width="45">
                             <p:commandButton action="contact"  icon="ui-icon-pencil" title="Otevřít" >
                                 <f:setPropertyActionListener value="#{person}" target="#{contactBean.contact}" />
                             </p:commandButton>

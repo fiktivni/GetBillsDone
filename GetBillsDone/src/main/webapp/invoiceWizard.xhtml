@@ -397,7 +397,7 @@
 
                                 <p:dataTable value="#{invoiceWizardBean.addedItems}" var="item" id="itemsTable" style="margin: 10px 0 10px 0;">
 
-                                    <p:column headerText="Kód">
+                                    <p:column headerText="Kód" width="115" >
                                         <h:outputText value="#{item.code}" />
                                     </p:column>
 
@@ -439,19 +439,22 @@
 
                                 </p:dataTable>
 
-
-                                <h:panelGrid id="sumItemGrid" columns="2"  style="font-weight: bolder;">
-                                    <p:outputLabel value="Celkem (bez DPH):"/>
+                                <h:panelGrid id="sumItemGrid" columns="2" 
+                                             style="text-align: right; width: 350px; margin: 10px 0 10px 690px;"
+                                             columnClasses="sumlabel,sumvalue">
+                                    <h:outputText value="Celkem bez DPH:"/>
                                     <h:outputText value="#{invoiceWizardBean.sumNetPrice}" >
                                         <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
                                     </h:outputText>
-                                    <p:outputLabel value="Celkem (s DPH):"/>
-                                    <h:outputText value="#{invoiceWizardBean.sumFullPrice}" >
+                                    <h:outputText value="Celkem DPH:"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumTax}" >
+                                        <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
+                                    </h:outputText>
+                                    <h:outputText value="Celkem:" class="h2"/>
+                                    <h:outputText value="#{invoiceWizardBean.sumFullPrice}" class="h2" >
                                         <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
                                     </h:outputText>
                                 </h:panelGrid>
-
-
 
 
                             </p:panel>
@@ -601,7 +604,7 @@
 
                                 <p:dataTable value="#{invoiceWizardBean.addedItems}" var="item" id="confitmItemsTable" >
 
-                                    <p:column headerText="Kód" width="90">
+                                    <p:column headerText="Kód" width="115">
                                         <h:outputText value="#{item.code}"/>
                                     </p:column>
 
@@ -637,7 +640,9 @@
 
                                 </p:dataTable>
 
-                                <h:panelGrid id="confirmSum" columns="2"  style="text-align: right; width: 340px; margin: 10px 0 10px 650px;">
+                                <h:panelGrid id="confirmSum" columns="2" 
+                                             style="text-align: right; width: 350px; margin: 10px 0 10px 690px;"
+                                             columnClasses="sumlabel,sumvalue">
                                     <h:outputText value="Celkem bez DPH:"/>
                                     <h:outputText value="#{invoiceWizardBean.sumNetPrice}" >
                                         <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
@@ -654,7 +659,7 @@
 
                                 <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
                                     <p:menuitem>
-                                        
+
                                     </p:menuitem>
                                     <f:facet name="options">
                                         <p:commandButton ajax="false" actionListener="#{invoiceWizardBean.printInvoice}"  value="Vytisknout" title="Vytisknout" icon="ui-icon-print" />

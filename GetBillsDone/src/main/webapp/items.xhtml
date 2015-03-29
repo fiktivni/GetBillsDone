@@ -23,37 +23,48 @@
                             <p:commandButton title="Nová položka" action="item" actionListener="#{itemBean.init}" icon="ui-icon-document" value="Nová položka"/>
                         </p:menuitem>
                         <f:facet name="options">
-                            
+
                         </f:facet>
                     </p:menubar>
 
-                    <p:dataTable paginator="true" var="item" value="#{dashboardBean.unlockedItems}">
+                    <p:dataTable value="#{dashboardBean.unlockedItems}"
+                                 var="item"
+                                 filteredValue="#{dashboardBean.filteredItems}"
+                                 widgetVar="itemsTable"
+                                 paginator="true" rows="10" rowsPerPageTemplate="10,20,30" >
 
-                        <p:column headerText="Název">
+                        <p:column headerText="Kód" width="115"
+                                  sortBy="#{item.code}"
+                                  filterBy="#{item.code}"  filterMatchMode="contains">
+                            <p:outputLabel value="#{item.code}" />
+                        </p:column>
+                        
+                        <p:column headerText="Název" 
+                                  sortBy="#{item.title}"
+                                  filterBy="#{item.title}"  filterMatchMode="contains">
                             <p:outputLabel value="#{item.title}" />
                         </p:column>
 
-                        <p:column headerText="Kód">
-                            <p:outputLabel value="#{item.code}" />
+                        <p:column headerText="DPH" style="text-align: right;" width="45"
+                                  sortBy="#{item.taxRate}" >
+                            <p:outputLabel value="#{item.taxRate} %" />
                         </p:column>
 
-                        <p:column headerText="Cena bez DPH">
+                        <p:column headerText="Cena bez&nbsp;DPH" style="text-align: right;" width="115"
+                                  sortBy="#{item.netPrice}" >
                             <p:outputLabel value="#{item.netPrice}" >
                                 <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
                             </p:outputLabel>
                         </p:column>
-                        
-                        <p:column headerText="DPH">
-                            <p:outputLabel value="#{item.taxRate} %" />
-                        </p:column>
-                        
-                        <p:column headerText="Cena s DPH">
+
+                        <p:column headerText="Cena s&nbsp;DPH" style="text-align: right;" width="115"
+                                  sortBy="#{item.fullPrice}" >
                             <p:outputLabel value="#{item.fullPrice}" >
                                 <f:convertNumber pattern="##0.00 Kč" locale="cs"/>
                             </p:outputLabel>
                         </p:column>
 
-                        <p:column style="width:32px;text-align: center">
+                        <p:column width="45">
                             <p:commandButton action="item"  icon="ui-icon-pencil" title="Otevřít" >
                                 <f:setPropertyActionListener value="#{item}" target="#{itemBean.item}" />
                             </p:commandButton>

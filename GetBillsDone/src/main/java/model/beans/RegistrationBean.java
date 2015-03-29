@@ -51,6 +51,7 @@ public class RegistrationBean implements Serializable{
             }
         }
         account.setId(Queries.createAccount(account));
+        user.setLocked(false);
         user.setAccountIdaccount(account.getId());
         user.setEmail(account.getEmail());
         Queries.createPerson(user);

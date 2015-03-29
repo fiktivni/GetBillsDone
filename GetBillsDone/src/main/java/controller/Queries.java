@@ -155,14 +155,14 @@ public class Queries {
      * @param accountId
      * @return user
      */
-    public static Person getUser(String accountId) {
+    public static Person getAccountUser(String accountId) {
 
         Session s = sessionFactory.openSession();
         Person user = new Person();
 
         try {
             Query q = s.createQuery("from Person where "
-                    + "account_idaccount ='" + accountId + "' and isowner = " + true);
+                    + "account_idaccount ='" + accountId + "' and isowner = " + true + " and locked = " + false);
             user = (Person) q.uniqueResult();
             return user;
         } catch (HibernateException e) {
@@ -170,6 +170,27 @@ public class Queries {
             s.close();
         }
         return user;
+    }
+    
+    /**
+     * Returns a Person with the id specified via the personID parameter.
+     * @param personID
+     * @return 
+     */
+    public static Person getPerson(int personID) {
+
+        Session s = sessionFactory.openSession();
+        Person owner = new Person();
+
+        try {
+            Query q = s.createQuery("from Person where " + "id ='" + personID + "'");
+            owner = (Person) q.uniqueResult();
+            return owner;
+        } catch (HibernateException e) {
+        } finally {
+            s.close();
+        }
+        return owner;
     }
 
     /**

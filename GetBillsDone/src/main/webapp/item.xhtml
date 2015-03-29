@@ -12,15 +12,17 @@
         <div id="automarginator" style="width: 1085px; margin: auto; font-family: sans-serif;">
 
             <ui:include src="/compositions/navigation.xhtml" />
+            
             <h:form id="form" onkeypress="if (event.keyCode === 13) {
                         document.getElementById('form:save_button').click();
                         return false;
                     }">
+                
                 <p:panel header="Položka">   
 
                     <p:messages id="msg" closable="true"/>
 
-                    <h:panelGrid id="grid" columns="2" cellpadding="5" style="margin: auto;">
+                    <h:panelGrid id="grid" columns="2">
                         <p:outputLabel for="title" value="Název:"/>                   
                         <p:inputText id="title" value="#{itemBean.item.title}" required="true" label="Název">
                             <p:ajax event="change" update="grid" resetValues="false"/>
@@ -54,12 +56,19 @@
 
                     <p:menubar style="border: none; background: none; padding: 8px 0 0 0;">
                         <p:menuitem>
-                            <p:commandButton title="Smazat" process="@this" icon="ui-icon-trash" action="#{itemBean.deleteItem}" />
+                            <p:commandButton title="Smazat" process="@this" icon="ui-icon-trash" action="contacts" actionListener="#{itemBean.deleteItem}" validateClient="false">
+                                <p:confirm header="Potvrzení" message="Opravdu chcete smazat tento kontakt?" icon="ui-icon-alert" />
+                            </p:commandButton>
                         </p:menuitem>
                         <f:facet name="options">
                             <p:commandButton id="save_button" ajax="false" action="#{itemBean.saveItem}" value="Uložit" process="grid" update="msg grid" validateClient="true"/>
                         </f:facet>
                     </p:menubar>
+                    
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Ano" type="button" styleClass="ui-confirmdialog-yes" />
+                        <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" />
+                    </p:confirmDialog>
 
                 </p:panel>
             </h:form>

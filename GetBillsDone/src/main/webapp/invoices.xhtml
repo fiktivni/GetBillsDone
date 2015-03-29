@@ -20,7 +20,12 @@
                     <p:menubar style="border: none; background: none; padding: 0 0 8px 0;">
                         
                         <p:menuitem>
-                            <p:commandButton title="Nová faktura" label="Nová faktura" value="Nová faktura" actionListener="#{invoiceWizardBean.init}" action="invoiceWizard" icon="ui-icon-document" />
+                            <p:commandButton title="Nová faktura"
+                                             label="Nová faktura"
+                                             value="Nová faktura"
+                                             actionListener="#{invoiceWizardBean.init}"
+                                             action="invoiceWizard"
+                                             icon="ui-icon-document" />
                         </p:menuitem>
                         
                         <f:facet name="options">
@@ -28,9 +33,11 @@
                         </f:facet>
                     </p:menubar>
 
-                    <p:dataTable paginator="true" var="invoice" value="#{dashboardBean.invoices}"
+                    <p:dataTable value="#{dashboardBean.invoices}"
+                                 var="invoice"
                                  filteredValue="#{dashboardBean.filteredInvoices}"
-                                 rows="10" rowsPerPageTemplate="10,20,30" widgetVar="invoicesTable">
+                                 widgetVar="invoicesTable"
+                                 paginator="true" rows="10" rowsPerPageTemplate="10,20,30" >
 
                         <p:column headerText="Číslo" width="110" style="text-align: left;"
                                   sortBy="#{invoice.invoicenumber}" filterBy="#{invoice.invoicenumber}"

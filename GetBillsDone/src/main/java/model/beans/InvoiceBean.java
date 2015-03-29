@@ -59,7 +59,7 @@ public class InvoiceBean implements Serializable {
          
          selectedInvoice.setMethodIdmethod(method.getId());
          controller.Printer.printInvoice(actionEvent, getSelectedInvoice(), 
-                 getInvoiceItems(), Queries.getUser(logedID), getCustomer(), getRecipient());
+                 getInvoiceItems(), Queries.getAccountUser(logedID), getCustomer(), getRecipient());
        
          if (!singleContact) {
              recipient = new Person();
@@ -222,7 +222,7 @@ public class InvoiceBean implements Serializable {
         selectedInvoice.setTotal(total);
         int savedInvoiceID = Queries.createInvoice(selectedInvoice);
 
-        Queries.createInvoiceHasPerson(new InvoiceHasPerson(savedInvoiceID, Queries.getUser(logedID).getId(), 1));
+        Queries.createInvoiceHasPerson(new InvoiceHasPerson(savedInvoiceID, Queries.getAccountUser(logedID).getId(), 1));
 
         /*
          Save recipient, customer and fill invoice with their ID and return her ID to variable

@@ -21,6 +21,7 @@
                         document.getElementById('form:save_button').click();
                         return false;
                     }">
+                
                 <p:panel header="Nastavení">       
 
                     <p:messages id="msg" closable="true"/>
@@ -28,49 +29,74 @@
                     <h:panelGrid id="grid" columns="4" cellpadding="5" style="margin: auto;">
 
                         <p:outputLabel for="name" value="Jméno:"/>                   
-                        <p:inputText id="name" value="#{settingsBean.user.name}" required="false" label="Jméno" validatorMessage="Chyba" />
+                        <p:inputText id="name" value="#{settingsBean.editedUser.name}" required="false" label="Jméno" validatorMessage="Chyba" />
                         <p:outputLabel for="lastName" value="Příjmení:"/>                   
-                        <p:inputText id="lastName" value="#{settingsBean.user.lastname}" required="false" label="Příjmení" validatorMessage="Chyba" />
+                        <p:inputText id="lastName" value="#{settingsBean.editedUser.lastname}" required="false" label="Příjmení" validatorMessage="Chyba" />
 
                         <p:outputLabel for="company" value="Firma:"/>                   
-                        <p:inputText id="company" value="#{settingsBean.user.company}" required="false" label="Firma" validatorMessage="Chyba" />
+                        <p:inputText id="company" value="#{settingsBean.editedUser.company}" required="false" label="Firma" validatorMessage="Chyba" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
                         <p:outputLabel for="ico" value="IČO:"/>                   
-                        <p:inputText id="ico" value="#{settingsBean.user.ico}" required="false" label="IČO" />
+                        <p:inputMask id="ico" value="#{settingsBean.editedUser.ico}"
+                                     mask="99999999"
+                                     label="IČO"
+                                     validatorMessage="Nesprávný formát, IČO musí mít 8 číslic"
+                                     required="false"/>
                         <p:outputLabel for="dic" value="DIČ:"/>                   
-                        <p:inputText id="dic" value="#{settingsBean.user.dic}" required="false" label="DIČ" />
+                        <p:inputMask id="dic" value="#{settingsBean.editedUser.dic}"
+                                     mask="aa9999999999"
+                                     label="DIČ"
+                                     validatorMessage="Nesprávný formát, DIČ musí mít 2 písmena následovaná 10 číslicemi"
+                                     required="false"/>
 
                         <p:outputLabel for="bankaccount" value="Číslo účtu:"/>                   
-                        <p:inputText id="bankaccount" value="#{settingsBean.user.bankaccount}" required="false" label="Číslo účtu" />
+                        <p:inputText id="bankaccount" value="#{settingsBean.editedUser.bankaccount}" required="false" label="Číslo účtu" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
-                        
-                        <p:outputLabel for="street" value="Ulice:"/>                   
-                        <p:inputText id="street" value="#{settingsBean.user.street}" required="false" label="Ulice" />
-                        <p:outputLabel for="house" value="Číslo:"/>                   
-                        <p:inputText id="house" value="#{settingsBean.user.house}" required="false" label="Číslo" />
                         
                         <p:outputLabel for="pcode" value="PSČ:"/>                   
-                        <p:inputText id="pcode" value="#{settingsBean.user.pcode}" required="false" label="PSČ" />
+                        <p:inputMask id="pcode" value="#{settingsBean.editedUser.pcode}"
+                                     mask="99999"
+                                     label="PSČ"
+                                     validatorMessage="Nesprávný formát, PSČ musí mít 5 číslic"
+                                     required="false"/>
+                        <p:outputLabel for="street" value="Ulice:"/>                   
+                        <p:inputText id="street" value="#{settingsBean.editedUser.street}" required="false" label="Ulice" />
+                           
                         <p:outputLabel for="city" value="Město:"/>                   
-                        <p:inputText  id="city" value="#{settingsBean.user.city}" required="false" label="Město" />
+                        <p:inputText  id="city" value="#{settingsBean.editedUser.city}" required="false" label="Město" />
+                        <p:spacer></p:spacer>
+                        <p:spacer></p:spacer>
 
                         <p:outputLabel for="state" value="Stát:"/>                   
-                        <p:inputText id="state" value="#{settingsBean.user.state}" required="false" label="Stát" />
+                        <p:inputText id="state" value="#{settingsBean.editedUser.state}" required="false" label="Stát" />
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
                         
                         <p:outputLabel for="email" value="E-mail:"/>                   
-                        <p:inputText id="email" value="#{settingsBean.user.email}" required="false" label="E-mail" />
+                        <p:inputText id="email" label="E-mail" value="#{settingsBean.editedUser.email}"
+                                     validatorMessage="Neplatný formát emailové adresy"
+                                     required="true">
+                            <f:validateRegex
+                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
                         <p:spacer></p:spacer>
                         <p:spacer></p:spacer>
 
                         <p:outputLabel for="phone" value="Telefon:"/>                   
-                        <p:inputText id="phone" value="#{settingsBean.user.phone}" required="false" label="Telefon" />
+                        <p:inputMask id="phone" value="#{settingsBean.editedUser.phone}"
+                                     mask="999999999"
+                                     label="Telefon"
+                                     validatorMessage="Nesprávný formát, Telefon musí mít 9 číslic"
+                                     required="false" />
                         <p:outputLabel for="fax" value="Fax:"/>                   
-                        <p:inputText id="fax" value="#{settingsBean.user.fax}" required="false" label="Fax" />
+                        <p:inputMask id="fax" value="#{settingsBean.editedUser.fax}"
+                                     mask="999999999"
+                                     label="Fax"
+                                     validatorMessage="Nesprávný formát, Fax musí mít 9 číslic"
+                                     required="false" />
 
                     </h:panelGrid>
 

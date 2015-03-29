@@ -27,6 +27,7 @@ public class Person implements java.io.Serializable {
     private String dic;
     private String pscAndCityInOneLine;
     private Boolean locked;
+    private String address;
 
     public Person() {
         this.name = "";
@@ -264,14 +265,24 @@ public class Person implements java.io.Serializable {
 
     public String getPscAndCityInOneLine() {
         if (pcode != null && city != null){
-            return pcode + " " + city;
+            pscAndCityInOneLine = pcode + " " + city;
         } else {
-            return "";
+            pscAndCityInOneLine = "";
         }
+        return pscAndCityInOneLine;
     }
 
     public void setPscAndCityInOneLine(String pscAndCityInOneLine) {
         this.pscAndCityInOneLine = pscAndCityInOneLine;
+    }
+    
+    public String getAddress() {
+        address = street + "\n" + pcode + " " + city + "\n" + state;
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 }

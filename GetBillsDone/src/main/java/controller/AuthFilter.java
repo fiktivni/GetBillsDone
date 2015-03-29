@@ -48,8 +48,8 @@ public class AuthFilter implements Filter {
             else   // user didn't log in but asking for a page that is not allowed so take user to login page
                    res.sendRedirect(req.getContextPath() + "/faces/index.xhtml");  // Anonymous user. Redirect to login page
       }
-     catch(Throwable t) {
-         System.out.println( t.getMessage());
+     catch(IOException | ServletException e) {
+         System.out.println( e.getMessage());
      }
     } //doFilter
  

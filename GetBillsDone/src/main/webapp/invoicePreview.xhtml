@@ -52,25 +52,25 @@
                             <p:spacer/>
 
                             <h:outputText value="Adresa:"/>
-                            <h:outputText value="#{invoiceWizardBean.user.wholename}"/>
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.wholename}"/>
 
                             <p:spacer/>
-                            <h:outputText value="#{invoiceWizardBean.user.company}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.company}" />
 
                             <p:spacer/>
-                            <h:outputText value="#{invoiceWizardBean.user.street}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.street}" />
 
                             <p:spacer/>
-                            <h:outputText value="#{invoiceWizardBean.user.pscAndCityInOneLine}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.pscAndCityInOneLine}" />
 
                             <p:spacer/>
-                            <h:outputText value="#{invoiceWizardBean.user.state}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.state}" />
 
                             <h:outputText value="IČO:" />
-                            <h:outputText value="#{invoiceWizardBean.user.ico}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.ico}" />
 
                             <h:outputText value="DIČ:" />
-                            <h:outputText value="#{invoiceWizardBean.user.dic}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.dic}" />
 
                             <h:outputText value="Doložka:" />
                             <h:outputText value="NOT IMPLEMENTED YET" />
@@ -79,13 +79,13 @@
                             <p:spacer/>
 
                             <h:outputText value="Tel:" />
-                            <h:outputText value="#{invoiceWizardBean.user.phone}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.phone}" />
 
                             <h:outputText value="Email:" />
-                            <h:outputText value="#{invoiceWizardBean.user.email}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.email}" />
 
                             <h:outputText value="WWW:" />
-                            <h:outputText value="#{invoiceWizardBean.user.www}" />
+                            <h:outputText value="#{invoiceWizardBean.invoiceOwner.www}" />
 
                             <p:spacer/>
                             <p:spacer/>
@@ -183,7 +183,7 @@
 
                     <p:dataTable value="#{invoiceWizardBean.addedItems}" var="item" id="confitmItemsTable">
 
-                        <p:column headerText="Kód" width="90">
+                        <p:column headerText="Kód" width="115">
                             <h:outputText value="#{item.code}"/>
                         </p:column>
 

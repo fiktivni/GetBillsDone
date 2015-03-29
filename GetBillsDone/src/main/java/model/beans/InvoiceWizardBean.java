@@ -5,7 +5,6 @@
  */
 package model.beans;
 
-import controller.HttpSessionUtil;
 import controller.Queries;
 import java.io.IOException;
 import java.io.Serializable;
@@ -20,7 +19,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
 import model.Invoice;
 import model.InvoiceHasItem;
 import model.InvoiceHasPerson;
@@ -47,8 +45,9 @@ public class InvoiceWizardBean implements Serializable {
     private Person address = new Person();
     private Method method = new Method();
     private Item item = new Item();
-    private final int userId = getUserID();
+    private int userId;
     private Person user = new Person();
+    private Person invoiceOwner = new Person();
     private List<Person> contacts = new ArrayList<>();
     private List<Person> unlockedContacts = new ArrayList();
     private List<Method> methods = new ArrayList();
@@ -73,6 +72,7 @@ public class InvoiceWizardBean implements Serializable {
     @PostConstruct
     public void init() {
 
+        userId = Integer.parseInt(dashboard.getLogedID());
         invoice = new Invoice();
         customer = new Person();
         address = new Person();
@@ -84,7 +84,7 @@ public class InvoiceWizardBean implements Serializable {
         allItems = dashboard.getItems();
         unlockedItems = dashboard.getUnlockedItems();
         addedItems = new ArrayList<>();
-        user = Queries.getUser("" + userId);
+        user = dashboard.getUser();
         sumNetPrice = 0;
         sumFullPrice = 0;
         customerOption = "search";
@@ -137,6 +137,14 @@ public class InvoiceWizardBean implements Serializable {
 
     public void setCustomer(Person customer) {
         this.customer = customer;
+    }
+
+    public Person getInvoiceOwner() {
+        return invoiceOwner;
+    }
+
+    public void setInvoiceOwner(Person invoiceOwner) {
+        this.invoiceOwner = invoiceOwner;
     }
 
     public Person getAddress() {
@@ -327,15 +335,6 @@ public class InvoiceWizardBean implements Serializable {
         this.unlockedItems = unlockedItems;
     }
 
-    private int getUserID() {
-        HttpSession s = HttpSessionUtil.getSession();
-        int userID = -1;
-        if (s != null) {
-            userID = Integer.parseInt((s.getAttribute("logedid").toString()));
-        }
-        return userID;
-    }
-
     public void addItem() {
         Item newItem = new Item();
         newItem.setAccountIdaccount(userId);
@@ -512,7 +511,7 @@ public class InvoiceWizardBean implements Serializable {
         invoice.setMethodIdmethod(method.getId());
         invoice.setTotal(total.intValue());
         invoice.setId(Queries.createInvoice(invoice));
-        Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), userId, 1));
+        Queries.createInvoiceHasPerson(new InvoiceHasPerson(invoice.getId(), user.getId(), 1));
 
         customer.setIsowner(false);
         savePerson(customer, 2);
@@ -549,7 +548,12 @@ public class InvoiceWizardBean implements Serializable {
             saveInvoice();
         }
 
-        controller.Printer.printInvoice(actionEvent, invoice, addedItems, user, customer, address);
+        if(invoiceOwner == new Person()){
+            controller.Printer.printInvoice(actionEvent, invoice, addedItems, user, customer, address);
+        } else {
+            controller.Printer.printInvoice(actionEvent, invoice, addedItems, invoiceOwner, customer, address);
+        }
+        
     }
 
     /**
@@ -578,17 +582,21 @@ public class InvoiceWizardBean implements Serializable {
 
         List<InvoiceHasPerson> invoiceHasPersons = Queries.getInvoiceHasPersonList(invoice.getId());
         for (InvoiceHasPerson invoiceHasPerson : invoiceHasPersons) {
-            for (Person contact : contacts) {
-                if (invoiceHasPerson.getPersonIdperson() == contact.getId()) {
-                    switch (invoiceHasPerson.getRelation()) {
-                        case 1: // We already know the USER
-                            break;
-                        case 2:
-                            customer = contact;
-                            break;
-                        case 3:
-                            address = contact;
-                            break;
+            if (invoiceHasPerson.getRelation() == 1) {
+                invoiceOwner = Queries.getPerson(invoiceHasPerson.getPersonIdperson());
+            } else {
+                for (Person contact : contacts) {
+                    if (invoiceHasPerson.getPersonIdperson() == contact.getId()) {
+                        switch (invoiceHasPerson.getRelation()) {
+                            case 1: // We already know who the owner is + this should not happen, ever.
+                                break;
+                            case 2:
+                                customer = contact;
+                                break;
+                            case 3:
+                                address = contact;
+                                break;
+                        }
                     }
                 }
             }
@@ -598,6 +606,15 @@ public class InvoiceWizardBean implements Serializable {
         return "invoicePreview";
     }
 
+    /**
+     * Clones the given Person at first, than locks the original one and
+     * updates/creates it, finally, creates a relation entity InvoiceHasPerson
+     * binding the global invoice and the locked Person using relation specified
+     * as the second parameter.
+     *
+     * @param person
+     * @param relation
+     */
     private void savePerson(Person person, int relation) {
 
         clonePerson(person);

@@ -32,8 +32,11 @@ public class DashboardBean implements Serializable {
     
 
     private List<Invoice> filteredInvoices;
+    private List<Item> filteredItems;
+    private List<Person> filteredPersons;
     
     private String logedID = "0";
+    private Person user;
 
     @PostConstruct
     public void init() {
@@ -48,8 +51,16 @@ public class DashboardBean implements Serializable {
         methods = Queries.getMethods();
         persons = Queries.getPersonsAtAccountId(logedID);
         items = Queries.getItemsAtAccountId(logedID);
-        
+        user = Queries.getAccountUser(logedID);
 
+    }
+
+    public Person getUser() {
+        return user;
+    }
+
+    public void setUser(Person user) {
+        this.user = user;
     }
 
     public List<Item> getItems() {
@@ -110,6 +121,22 @@ public class DashboardBean implements Serializable {
 
     public void setFilteredInvoices(List<Invoice> filteredInvoices) {
         this.filteredInvoices = filteredInvoices;
+    }
+
+    public List<Item> getFilteredItems() {
+        return filteredItems;
+    }
+
+    public void setFilteredItems(List<Item> filteredItems) {
+        this.filteredItems = filteredItems;
+    }
+
+    public List<Person> getFilteredPersons() {
+        return filteredPersons;
+    }
+
+    public void setFilteredPersons(List<Person> filteredPersons) {
+        this.filteredPersons = filteredPersons;
     }
     
     public String getUsersWholeName(int personId){

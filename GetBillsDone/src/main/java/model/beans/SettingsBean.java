@@ -12,8 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpSession;
 import model.Account;
 import model.Person;
 
@@ -25,39 +25,55 @@ import model.Person;
 @SessionScoped
 public class SettingsBean implements Serializable {
 
-    private Person user, originalUser;
+    @Inject
+    DashboardBean dashboard;
+
+    private Person user, editedUser = new Person();
     private Account account;
 
     @PostConstruct
     public void init() {
-        String sessionId = getUserID();
-        user = Queries.getUser(sessionId);
+        
+        String sessionId = dashboard.getLogedID();
+        
         account = Queries.getAccount(sessionId);
-        originalUser = user;
+        
+        user = dashboard.getUser();
+        
+        editedUser.setAccountIdaccount(user.getAccountIdaccount());
+        editedUser.setBankaccount(user.getBankaccount());
+        editedUser.setCity(user.getCity());
+        editedUser.setCompany(user.getCompany());
+        editedUser.setDic(user.getDic());
+        editedUser.setEmail(user.getEmail());
+        editedUser.setFax(user.getFax());
+        editedUser.setHouse(user.getHouse());
+        editedUser.setIco(user.getIco());
+        editedUser.setIsowner(user.getIsowner());
+        editedUser.setLastname(user.getLastname());
+        editedUser.setLocked(false);
+        editedUser.setName(user.getName());
+        editedUser.setPcode(user.getPcode());
+        editedUser.setPhone(user.getPhone());
+        editedUser.setState(user.getState());
+        editedUser.setStreet(user.getStreet());
+        editedUser.setWww(user.getWww());
     }
 
     public void updateUser() {
+        user.setLocked(true);
         Queries.updatePerson(user);
-        originalUser = user;
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Uloženo"));
+        Queries.createPerson(editedUser);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Nastavení aktualizována"));
     }
 
     public String deleteUser() {
         Queries.deleteAccount(account);
-        Queries.deletePerson(originalUser);
+        Queries.deletePerson(user);
         return logout();
     }
 
-    private String getUserID() {
-        HttpSession s = HttpSessionUtil.getSession();
-        String userID = "";
-        if (s != null) {
-            userID = (s.getAttribute("logedid").toString());
-        }
-        return userID;
-    }
-    
-    private String logout(){
+    private String logout() {
         HttpSessionUtil.getSession().invalidate();
         return "index";
     }
@@ -78,12 +94,12 @@ public class SettingsBean implements Serializable {
         this.account = account;
     }
 
-    public Person getOriginalUser() {
-        return originalUser;
+    public Person getEditedUser() {
+        return editedUser;
     }
 
-    public void setOriginalUser(Person originalUser) {
-        this.originalUser = originalUser;
+    public void setEditedUser(Person editedUser) {
+        this.editedUser = editedUser;
     }
 
 }
